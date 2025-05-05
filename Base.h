@@ -92,10 +92,12 @@ struct Tripla{
     double vm_cpu_time;
     double vm_cost;
     double vm_time_total;
+    double vm_slowdown;
 };
 
 struct Solution{
     vector<Tripla> vet_tripla;
     double cost;
     double time;
+    double cost_fin;
 };

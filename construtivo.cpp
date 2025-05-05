@@ -34,6 +34,8 @@ double calculaTempoTotal(Solution S);
 
 double calculaTempoVM(Problem p, Tasks task, Machine machine);
 
+double calculaCustoFin(Solution S);
+
 //========================================================================================================================================
 
 Solution Construtivo(float alpha, float phi ,int* seed,Problem p){
@@ -63,6 +65,7 @@ Solution Construtivo(float alpha, float phi ,int* seed,Problem p){
             for(int j = 0; j < p.vet_machine.size(); j++){
                 aux.task_id = TarefasViaveis[i].task_id;
                 aux.vm_id = p.vet_machine[j].id;
+                aux.vm_slowdown = p.vet_machine[j].slowdown;
                 aux.vm_time_total = calculaTempoVM(p,TarefasViaveis[i],p.vet_machine[j]); 
                 aux.vm_cost = p.vet_machine[j].cost * p.vet_machine[j].slowdown * aux.vm_time_total; //Verificar se o slowdown considera ja o tempo de leitura e escrita
                 aux.vm_cpu_time = TarefasViaveis[i].vm_cpu_time;
@@ -90,6 +93,7 @@ Solution Construtivo(float alpha, float phi ,int* seed,Problem p){
         TarefasViaveis.clear(); //Limpa a lista de tarefas viáveis
         TarefasViaveis = atualizaTarefasViaveis(TarefasViaveis,p.vet_tasks,p.vet_data); //Atualiza a lista de tarefas viáveis
     }
+    S.cost_fin = calculaCustoFin(S);
     S.cost = calculaCustoTotal(S);
     S.time = calculaTempoTotal(S);
     return S;
@@ -238,6 +242,21 @@ double calculaTempoTotal(Solution S){
         }
     }
     return tempo;
+}
+
+//========================================================================================================================================
+
+double calculaCustoFin(Solution S){
+    double custo_fin = 0;
+    for(int i = 0; i < S.vet_tripla.size(); i++){
+        if(S.vet_tripla[i].type == 1){
+            custo_fin += S.vet_tripla[i].task_p_config_cost;
+        }
+        else{
+            custo_fin += S.vet_tripla[i].vm_cost * S.vet_tripla[i].vm_time_total * S.vet_tripla[i].vm_slowdown;
+        }
+    }
+    return custo_fin;
 }
 
 //======================  ANOTAÇÕES  ======================

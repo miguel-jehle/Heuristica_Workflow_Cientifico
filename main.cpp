@@ -220,15 +220,15 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
     FILE * fs = fopen(caminho_resp_final, "w");
     if(!fs) exit(1);
-    fprintf(fs, "<Instância> \t <Melhor_Custo> \t <Custo_Médio> \t <Tempo_CPU_Médio>\n");
+    fprintf(fs, "<Instância> \t <Custo_Financeiro_Melhor> \t <Tempo_Melhor> \t <Custo_Melhor> \t <Custo_Médio> \t <Tempo_CPU_Médio>\n");
     fclose(fs);
 
     FILE * fl = fopen(caminho_resp_geral, "w");
     if(!fl) exit(1);
-    fprintf(fl, "<Instância> \t" "<Semente> \t <Melhor_Custo> \t <Tempo_CPU>\n");
+    fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\n");
     fclose(fl);
 
-    FILE * fp = fopen("Instancias/sumario.txt", "r");
+    FILE * fp = fopen("Instancias/teste.txt", "r");
     if(!fp) exit(1);
     char arquivo[200];
 
@@ -244,6 +244,8 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
         double custo_médio = 0.0;
         double tempo_CPU_médio = 0.0;
+        double custo_financeiro_melhor = 0.0;
+        double tempo_melhor = 0.0;
         double melhor_custo = __FLT_MAX__;
 
         for(int i = 0; i < 10; i++){
@@ -266,7 +268,11 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
             
             custo_médio += cost_otima;
             tempo_CPU_médio += s_CPU_final - s_CPU_inicial;
-            if(cost_otima < melhor_custo) melhor_custo = cost_otima;
+            if(cost_otima < melhor_custo) {
+                melhor_custo = cost_otima;
+                custo_financeiro_melhor = otima.cost_fin;
+                tempo_melhor = otima.time;
+            }
 
             FILE * fl = fopen(caminho_resp_geral, "a");
             if(!fl) exit(1);
@@ -281,7 +287,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
         FILE * fs = fopen(caminho_resp_final, "a");
         if(!fs) exit(1);
-        fprintf(fs, "%s\t %f\t %f\t %f\n", arquivo, melhor_custo, custo_médio, tempo_CPU_médio);
+        fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", arquivo, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_médio, tempo_CPU_médio);
         fclose(fs);
     }
     fclose(fp);
