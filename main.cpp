@@ -229,7 +229,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
     fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\n");
     fclose(fl);
 
-    FILE * fp = fopen("Instancias/teste.txt", "r");
+    FILE * fp = fopen("Instancias/sumario.txt", "r");
     if(!fp) exit(1);
     char arquivo[200];
 
@@ -241,7 +241,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
         Problem p;
         p = le_dados(caminho);
-        printa_dados(p);
+        //printa_dados(p);
 
         double custo_médio = 0.0;
         double tempo_CPU_médio = 0.0;
