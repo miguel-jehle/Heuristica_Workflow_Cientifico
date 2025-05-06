@@ -249,7 +249,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         double tempo_melhor = 0.0;
         double melhor_custo = __FLT_MAX__;
 
-        for(int i = 0; i < 1; i++){
+        for(int i = 0; i < 10; i++){
 
             Solution S, otima;
             float cost_otima = __FLT_MAX__;

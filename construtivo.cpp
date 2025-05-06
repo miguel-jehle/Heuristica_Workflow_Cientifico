@@ -269,16 +269,13 @@ double calculaTempoVM(Problem p, Tasks task, Machine machine){
             if(task.id_inputs[i] == p.vet_data[j].data_id){
                 tempo += p.vet_data[j].read_time;                
             }
-            //printf(" %d | %d \n", task.id_inputs[i], p.vet_data[j].data_id);
         }
-
-        //printf("==========================\n");
-
+    }
+    for(int i = 0; i < task.id_outputs.size(); i++){
         for(int j = 0; j < p.vet_data.size(); j++){
             if(task.id_outputs[i] == p.vet_data[j].data_id){
                 tempo += p.vet_data[j].write_time;
             }
-            //printf(" %d | %d\n", task.id_outputs[i],p.vet_data[j].data_id); 
         }
     }
     tempo += task.vm_cpu_time;
