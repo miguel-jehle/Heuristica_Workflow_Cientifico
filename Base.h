@@ -90,7 +90,7 @@ struct Tripla{
     double task_p_config_cost;
     double task_time_total;
     double vm_cpu_time;
-    double vm_cost;
+    double vm_cost_total;
     double vm_time_total;
     double vm_slowdown;
 };

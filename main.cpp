@@ -190,12 +190,13 @@ Problem le_dados(const char* arquivo){
 }
 
 void escreveSolucao(Solution S, FILE * fl){
+fprintf(fl, "<task_id>\t <FX/VM id>\t <Custo_fin>\t <Tempo_workflow>\t <Custo_normalizado>\n");
     for(int i = 0; i < S.vet_tripla.size(); i++){
         if(S.vet_tripla[i].type == 0){
-            fprintf(fl, "%d %d %d %f %f VM\n", S.vet_tripla[i].task_id, S.vet_tripla[i].vm_id, S.vet_tripla[i].type, S.vet_tripla[i].vm_cost, S.vet_tripla[i].vm_cpu_time);
+            fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  VM\n", S.vet_tripla[i].task_id, S.vet_tripla[i].vm_id, S.vet_tripla[i].vm_cost_total, S.vet_tripla[i].vm_time_total, S.vet_tripla[i].final_cost);
         }
         else{
-            fprintf(fl, "%d %d %d %f %f FX\n", S.vet_tripla[i].task_id, S.vet_tripla[i].config_id, S.vet_tripla[i].type, S.vet_tripla[i].task_p_config_cost, S.vet_tripla[i].task_time_total);
+            fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  FX\n", S.vet_tripla[i].task_id, S.vet_tripla[i].config_id, S.vet_tripla[i].task_p_config_cost, S.vet_tripla[i].task_time_total, S.vet_tripla[i].final_cost);
         }
     }
     return;
@@ -220,7 +221,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
     FILE * fs = fopen(caminho_resp_final, "w");
     if(!fs) exit(1);
-    fprintf(fs, "<Instância> \t <Custo_Financeiro_Melhor> \t <Tempo_Melhor> \t <Custo_Melhor> \t <Custo_Médio> \t <Tempo_CPU_Médio>\n");
+    fprintf(fs, "<Instância> \t <Custo_Financeiro_Melhor> \t <Tempo_Melhor> \t <Custo_Normalizado_Melhor> \t <Custo_Normalizado_Médio> \t <Tempo_CPU_Médio>\n");
     fclose(fs);
 
     FILE * fl = fopen(caminho_resp_geral, "w");
@@ -248,7 +249,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         double tempo_melhor = 0.0;
         double melhor_custo = __FLT_MAX__;
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 1; i++){
 
             Solution S, otima;
             float cost_otima = __FLT_MAX__;

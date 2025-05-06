@@ -67,7 +67,7 @@ Solution Construtivo(float alpha, float phi ,int* seed,Problem p){
                 aux.vm_id = p.vet_machine[j].id;
                 aux.vm_slowdown = p.vet_machine[j].slowdown;
                 aux.vm_time_total = calculaTempoVM(p,TarefasViaveis[i],p.vet_machine[j]); 
-                aux.vm_cost = p.vet_machine[j].cost * p.vet_machine[j].slowdown * aux.vm_time_total; //Verificar se o slowdown considera ja o tempo de leitura e escrita
+                aux.vm_cost_total = p.vet_machine[j].cost * p.vet_machine[j].slowdown * aux.vm_time_total; //Verificar se o slowdown considera ja o tempo de leitura e escrita
                 aux.vm_cpu_time = TarefasViaveis[i].vm_cpu_time;
                 aux.type = 0;
                 LC.push_back(aux);
@@ -206,7 +206,7 @@ vector <Tripla> normalizaCustos(vector <Tripla> LC, float phi, double max_fin_co
             LC[i].final_cost = phi * (LC[i].task_time_total/max_runtine) + (1 - phi) * (LC[i].task_p_config_cost/max_fin_cost);
         }
         else{
-            LC[i].final_cost = phi * (LC[i].vm_time_total/max_runtine) + (1 - phi) * (LC[i].vm_cost/max_fin_cost);
+            LC[i].final_cost = phi * (LC[i].vm_time_total/max_runtine) + (1 - phi) * (LC[i].vm_cost_total/max_fin_cost);
         }
     }
     return LC;
@@ -253,7 +253,7 @@ double calculaCustoFin(Solution S){
             custo_fin += S.vet_tripla[i].task_p_config_cost;
         }
         else{
-            custo_fin += S.vet_tripla[i].vm_cost * S.vet_tripla[i].vm_time_total * S.vet_tripla[i].vm_slowdown;
+            custo_fin += S.vet_tripla[i].vm_cost_total;
         }
     }
     return custo_fin;
@@ -264,18 +264,21 @@ double calculaCustoFin(Solution S){
 double calculaTempoVM(Problem p, Tasks task, Machine machine){
     //calcular o custo sendo (VM_CPU_time + tempo de leitura + tempo saidas)
     double tempo = 0;
-    for(int i = 0; i < task.n_input; i++){
+    for(int i = 0; i < task.id_inputs.size(); i++){
         for(int j = 0; j < p.vet_data.size(); j++){
             if(task.id_inputs[i] == p.vet_data[j].data_id){
-                tempo += p.vet_data[j].read_time;
-                break;
+                tempo += p.vet_data[j].read_time;                
             }
+            //printf(" %d | %d \n", task.id_inputs[i], p.vet_data[j].data_id);
         }
+
+        //printf("==========================\n");
+
         for(int j = 0; j < p.vet_data.size(); j++){
             if(task.id_outputs[i] == p.vet_data[j].data_id){
                 tempo += p.vet_data[j].write_time;
-                break;
             }
+            //printf(" %d | %d\n", task.id_outputs[i],p.vet_data[j].data_id); 
         }
     }
     tempo += task.vm_cpu_time;
