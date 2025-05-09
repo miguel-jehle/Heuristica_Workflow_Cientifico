@@ -226,10 +226,10 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
     FILE * fl = fopen(caminho_resp_geral, "w");
     if(!fl) exit(1);
-    fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\n");
+    fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\t <Custo_Financeiro> \t <Tempo_Workflow>\n");
     fclose(fl);
 
-    FILE * fp = fopen("Instancias/sumario.txt", "r");
+    FILE * fp = fopen("Instancias/teste.txt", "r");
     if(!fp) exit(1);
     char arquivo[200];
 
@@ -245,6 +245,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
         double custo_médio = 0.0;
         double tempo_CPU_médio = 0.0;
+        
         double custo_financeiro_melhor = 0.0;
         double tempo_melhor = 0.0;
         double melhor_custo = __FLT_MAX__;
@@ -269,6 +270,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
             
             custo_médio += cost_otima;
             tempo_CPU_médio += s_CPU_final - s_CPU_inicial;
+
             if(cost_otima < melhor_custo) {
                 melhor_custo = cost_otima;
                 custo_financeiro_melhor = otima.cost_fin;
@@ -277,7 +279,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
             FILE * fl = fopen(caminho_resp_geral, "a");
             if(!fl) exit(1);
-            fprintf(fl, "%s\t %d\t %.15f\t %f\n", arquivo, i+1, cost_otima, s_CPU_final - s_CPU_inicial);
+            fprintf(fl, "%s\t %d\t %.15f\t %f\t %f\t %f\n", arquivo, i+1, cost_otima, s_CPU_final - s_CPU_inicial, otima.cost_fin, otima.time);
             escreveSolucao(otima, fl);
             fprintf(fl, "========================================================================\n");
             fclose(fl);
