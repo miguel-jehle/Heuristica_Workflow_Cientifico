@@ -1,5 +1,5 @@
 #<#tasks> <#config> <#data> <#vms> <#buckets> <#bucket_ranges> <max_running_time> <max_financial_cost>
-46	5	108	3	1	3	1000	999999
+46	5	108	3	1	3	500000	10
 
 #<task_id> <activity_id> <task_type__0-VM__1-VM_FX> <vm_cpu_time> <n_input> [<id_input>...] <n_output> [<id_output>...]
 28	1	1	0.039757994934916496	1	[29]	1	[30]

@@ -241,7 +241,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
         Problem p;
         p = le_dados(caminho);
-        //printa_dados(p);
+        printa_dados(p);
 
         double custo_médio = 0.0;
         double tempo_CPU_médio = 0.0;
