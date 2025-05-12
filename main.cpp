@@ -24,7 +24,7 @@ void Tempo_CPU_Sistema(double *seg_CPU_total, double *seg_sistema_total)
 
 void printa_dados(Problem p){
     printf(" #<#tasks> <#config> <#data> <#vms> <#buckets> <#bucket_ranges> <max_running_time> <max_financial_cost>\n");
-    printf(" %d     %d     %d     %d     %d     %d     %d     %d\n\n", p.tasks,p.config, p.data, p.vms, p.buckets, p.bucket_ranges, p.max_runtime, p.max_fin_cost);
+    printf(" %d     %d     %d     %d     %d     %d     %lf     %lf\n\n", p.tasks,p.config, p.data, p.vms, p.buckets, p.bucket_ranges, p.max_runtime, p.max_fin_cost);
 
     printf(" #<task_id> <activity_id> <task_type__0-VM__1-FX> <vm_cpu_time> <n_input> [<id_input>...] <n_output> [<id_output>...]\n");
     for(int i = 0; i < p.tasks; i++){
@@ -96,7 +96,7 @@ Problem le_dados(const char* arquivo){
     ////////////////////////////////////////////////////////
 
     fscanf(fp, "%199[^\n]",temp); //Lê o primeiro header
-    fscanf(fp, "%d %d %d %d %d %d %d %d ", &p.tasks, &p.config, &p.data, &p.vms, &p.buckets, &p.bucket_ranges, &p.max_runtime, &p.max_fin_cost);
+    fscanf(fp, "%d %d %d %d %d %d %lf %lf ", &p.tasks, &p.config, &p.data, &p.vms, &p.buckets, &p.bucket_ranges, &p.max_runtime, &p.max_fin_cost);
 
     ////////////////////////////////////////////////////////
 
@@ -241,6 +241,8 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
         Problem p;
         p = le_dados(caminho);
+        p.max_fin_cost = calculaMaxFinCost(p);
+        p.max_runtime = calculaMaxRuntime(p);
         printa_dados(p);
 
         double custo_médio = 0.0;

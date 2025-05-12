@@ -281,3 +281,33 @@ double calculaTempoVM(Problem p, Tasks task, Machine machine){
     tempo += task.vm_cpu_time;
     return tempo; 
 }
+
+//========================================================================================================================================
+
+double calculaMaxFinCost(Problem p) {
+    double max_fin_cost = 0;
+
+    Machine max_machine = p.vet_machine.back();
+
+    for (int i = 0; i < p.vet_tasks.size(); i++) {
+        double max_machine_time = calculaTempoVM(p, p.vet_tasks[i], max_machine);
+        double max_machine_cost = max_machine.cost * max_machine.slowdown * max_machine_time;
+        max_fin_cost += max_machine_cost;
+    }
+
+    return max_fin_cost;
+}
+
+//========================================================================================================================================
+
+double calculaMaxRuntime(Problem p) {
+    double max_runtime = 0;
+
+    for (int i = 0; i < p.vet_tasks.size(); i++) {
+        max_runtime += p.vet_tasks[i].vet_config[0].task_time_total;
+    }
+
+    return max_runtime;
+}
+
+//========================================================================================================================================
