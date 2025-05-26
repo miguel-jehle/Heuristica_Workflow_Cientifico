@@ -1,5 +1,6 @@
 #include "Base.h"
 #include "construtivo.cpp"
+#include "busca_local.cpp"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -229,7 +230,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
     fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\t <Custo_Financeiro> \t <Tempo_Workflow>\n");
     fclose(fl);
 
-    FILE * fp = fopen("Instancias/sumario.txt", "r");
+    FILE * fp = fopen("Instancias/teste.txt", "r");
     if(!fp) exit(1);
     char arquivo[200];
 
@@ -247,7 +248,9 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         
         double custo_médio = 0.0;
         double tempo_CPU_médio = 0.0;
-        
+
+
+        Solution S_melhor;
         double custo_financeiro_melhor = 0.0;
         double tempo_melhor = 0.0;
         double melhor_custo = __FLT_MAX__;
@@ -277,6 +280,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
                 melhor_custo = cost_otima;
                 custo_financeiro_melhor = otima.cost_fin;
                 tempo_melhor = otima.time;
+                S_melhor = otima;
             }
 
             FILE * fl = fopen(caminho_resp_geral, "a");
@@ -294,6 +298,13 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         if(!fs) exit(1);
         fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", arquivo, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_médio, tempo_CPU_médio);
         fclose(fs);
+
+        S_melhor = Swap_Machine(S_melhor, p);
+
+        FILE * fm = fopen("Resultados/temp/res_final.txt", "w");
+        if(!fm) exit(1);
+        fprintf(fm, "%s\t %f\t %f\t %f\t %f\t %f\n", arquivo, S_melhor.cost_fin, S_melhor.time, S_melhor.cost, custo_médio, tempo_CPU_médio);
+        fclose(fm);
     }
     fclose(fp);
     return 0;
