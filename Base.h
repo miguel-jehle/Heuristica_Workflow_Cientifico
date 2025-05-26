@@ -64,8 +64,8 @@ struct Problem{
     int data;
     int vms;
     int buckets;
-    int max_runtime;
-    int max_fin_cost;
+    double max_runtime;
+    double max_fin_cost;
     int bucket_ranges;
     vector<Tasks> vet_tasks;
     vector<Data> vet_data;

@@ -55,6 +55,7 @@ Solution Construtivo(float alpha, float phi ,int* seed,Problem p){
                 aux.config_id = TarefasViaveis[i].vet_config[j].config_id;
                 aux.task_p_config_cost = TarefasViaveis[i].vet_config[j].task_p_config_cost;
                 aux.task_time_total = TarefasViaveis[i].vet_config[j].task_time_total;
+                if(aux.task_time_total > 900) continue;
                 aux.type = 1;
                 LC.push_back(aux);
             }
@@ -281,3 +282,43 @@ double calculaTempoVM(Problem p, Tasks task, Machine machine){
     tempo += task.vm_cpu_time;
     return tempo; 
 }
+
+//========================================================================================================================================
+
+double calculaMaxFinCost(Problem p) {
+    double max_fin_cost_FX = 0;
+
+    for (int i = 0; i < p.vet_tasks.size(); i++) {
+        max_fin_cost_FX += p.vet_tasks[i].vet_config[4].task_p_config_cost;
+    }
+
+    double max_fin_cost_VM = 0;
+
+    Machine max_machine = p.vet_machine.back();
+
+    for (int i = 0; i < p.vet_tasks.size(); i++) {
+        double max_machine_time = calculaTempoVM(p, p.vet_tasks[i], max_machine);
+        double max_machine_cost = max_machine.cost * max_machine.slowdown * max_machine_time;
+        max_fin_cost_VM += max_machine_cost;
+    }
+
+    if (max_fin_cost_VM > max_fin_cost_FX) {
+        return max_fin_cost_VM;
+    } else {
+        return max_fin_cost_FX;
+    }
+}
+
+//========================================================================================================================================
+
+double calculaMaxRuntime(Problem p) {
+    double max_runtime = 0;
+
+    for (int i = 0; i < p.vet_tasks.size(); i++) {
+        max_runtime += p.vet_tasks[i].vet_config[0].task_time_total;
+    }
+
+    return max_runtime;
+}
+
+//========================================================================================================================================
