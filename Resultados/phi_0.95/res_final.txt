@@ -1,2 +1,2 @@
 <Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
-015_T46_C5_D108_VM3.txt	 0.000411	 17.713827	 0.016830	 0.017449	 16.555222
+002_T7_C5_D14_VM3.txt	 0.000051	 3.058449	 0.002906	 0.002906	 0.035524
