@@ -1,5 +1,6 @@
 #include "Base.h"
 #include "construtivo.cpp"
+#include "busca_local.cpp"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -24,7 +25,11 @@ void Tempo_CPU_Sistema(double *seg_CPU_total, double *seg_sistema_total)
 
 void printa_dados(Problem p){
     printf(" #<#tasks> <#config> <#data> <#vms> <#buckets> <#bucket_ranges> <max_running_time> <max_financial_cost>\n");
+<<<<<<< HEAD
     printf(" %d     %d     %d     %d     %d     %d     %lf    %lf\n\n", p.tasks,p.config, p.data, p.vms, p.buckets, p.bucket_ranges, p.max_runtime, p.max_fin_cost);
+=======
+    printf(" %d     %d     %d     %d     %d     %d     %lf     %lf\n\n", p.tasks,p.config, p.data, p.vms, p.buckets, p.bucket_ranges, p.max_runtime, p.max_fin_cost);
+>>>>>>> d7ca24f320f8a460a19de21120c342369bd7c230
 
     printf(" #<task_id> <activity_id> <task_type__0-VM__1-FX> <vm_cpu_time> <n_input> [<id_input>...] <n_output> [<id_output>...]\n");
     for(int i = 0; i < p.tasks; i++){
@@ -229,7 +234,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
     fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\t <Custo_Financeiro> \t <Tempo_Workflow>\n");
     fclose(fl);
 
-    FILE * fp = fopen("Instancias/sumario.txt", "r");
+    FILE * fp = fopen("Instancias/teste.txt", "r");
     if(!fp) exit(1);
     char arquivo[200];
 
@@ -247,7 +252,9 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         
         double custo_médio = 0.0;
         double tempo_CPU_médio = 0.0;
-        
+
+
+        Solution S_melhor;
         double custo_financeiro_melhor = 0.0;
         double tempo_melhor = 0.0;
         double melhor_custo = __FLT_MAX__;
@@ -277,6 +284,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
                 melhor_custo = cost_otima;
                 custo_financeiro_melhor = otima.cost_fin;
                 tempo_melhor = otima.time;
+                S_melhor = otima;
             }
 
             FILE * fl = fopen(caminho_resp_geral, "a");
@@ -294,6 +302,13 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         if(!fs) exit(1);
         fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", arquivo, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_médio, tempo_CPU_médio);
         fclose(fs);
+
+        S_melhor = Swap_Machine(S_melhor, p);
+
+        FILE * fm = fopen("Resultados/temp/res_final.txt", "w");
+        if(!fm) exit(1);
+        fprintf(fm, "%s\t %f\t %f\t %f\t %f\t %f\n", arquivo, S_melhor.cost_fin, S_melhor.time, S_melhor.cost, custo_médio, tempo_CPU_médio);
+        fclose(fm);
     }
     fclose(fp);
     return 0;
