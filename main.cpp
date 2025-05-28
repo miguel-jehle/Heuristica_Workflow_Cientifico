@@ -1,11 +1,6 @@
-#include "Base.h"
-#include "construtivo.cpp"
 #include "busca_local.cpp"
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
-#include <sys/resource.h> 
-#include <unistd.h>  // Adicione no topo
+
+
 
 void Tempo_CPU_Sistema(double *seg_CPU_total, double *seg_sistema_total)
 {
@@ -25,11 +20,7 @@ void Tempo_CPU_Sistema(double *seg_CPU_total, double *seg_sistema_total)
 
 void printa_dados(Problem p){
     printf(" #<#tasks> <#config> <#data> <#vms> <#buckets> <#bucket_ranges> <max_running_time> <max_financial_cost>\n");
-<<<<<<< HEAD
     printf(" %d     %d     %d     %d     %d     %d     %lf    %lf\n\n", p.tasks,p.config, p.data, p.vms, p.buckets, p.bucket_ranges, p.max_runtime, p.max_fin_cost);
-=======
-    printf(" %d     %d     %d     %d     %d     %d     %lf     %lf\n\n", p.tasks,p.config, p.data, p.vms, p.buckets, p.bucket_ranges, p.max_runtime, p.max_fin_cost);
->>>>>>> d7ca24f320f8a460a19de21120c342369bd7c230
 
     printf(" #<task_id> <activity_id> <task_type__0-VM__1-FX> <vm_cpu_time> <n_input> [<id_input>...] <n_output> [<id_output>...]\n");
     for(int i = 0; i < p.tasks; i++){
@@ -303,8 +294,18 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", arquivo, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_médio, tempo_CPU_médio);
         fclose(fs);
 
-        S_melhor = Swap_Machine(S_melhor, p);
+        Solution S_bl = S_melhor;
 
+        do{
+            S_bl = Swap_Machine(S_bl, p, phi);
+            if(S_bl.cost < S_melhor.cost){
+                S_melhor = S_bl;
+                printf("AHHHHHHHHHHHHHHHHHH------IF");
+            }
+            else break;
+        }
+        while(1);
+        printf("AHHHHHHHHHHHHHHHHHH");
         FILE * fm = fopen("Resultados/temp/res_final.txt", "w");
         if(!fm) exit(1);
         fprintf(fm, "%s\t %f\t %f\t %f\t %f\t %f\n", arquivo, S_melhor.cost_fin, S_melhor.time, S_melhor.cost, custo_médio, tempo_CPU_médio);

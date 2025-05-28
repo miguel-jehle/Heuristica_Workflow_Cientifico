@@ -1,62 +1,107 @@
-#include "Base.h"
+#include "construtivo.cpp"
 
-double calculaTempoVM1(Problem p, Tasks task, Machine machine){
-    //calcular o custo sendo (VM_CPU_time + tempo de leitura + tempo saidas)
-    double tempo = 0;
-    for(int i = 0; i < task.id_inputs.size(); i++){
-        for(int j = 0; j < p.vet_data.size(); j++){
-            if(task.id_inputs[i] == p.vet_data[j].data_id){
-                tempo += p.vet_data[j].read_time;                
-            }
-        }
-    }
-    for(int i = 0; i < task.id_outputs.size(); i++){
-        for(int j = 0; j < p.vet_data.size(); j++){
-            if(task.id_outputs[i] == p.vet_data[j].data_id){
-                tempo += p.vet_data[j].write_time;
-            }
-        }
-    }
-    tempo += task.vm_cpu_time;
-    return tempo; 
-}
+Solution Swap_Machine(Solution S, Problem p, float phi){
+    printf("HAHAHAHAHAHAHAH");
+    Solution S_atual = S;
+    for(int i = 0; i < S_atual.vet_tripla.size(); i++){
+        if(S_atual.vet_tripla[i].type == 0){
+            for(int j = 0; j < p.vet_machine.size(); j++){
+                if(S_atual.vet_tripla[i].vm_id == p.vet_machine[j].id) continue;
+                int k;
+                for(k = 0; k < p.vet_tasks.size(); k++){
+                    if (p.vet_tasks[k].task_id == S_atual.vet_tripla[i].task_id) break;
+                }
 
-double calculaCustoTotal1(Solution S){
-    double custo = 0;
-    for(int i = 0; i < S.vet_tripla.size(); i++){
-        custo += S.vet_tripla[i].final_cost; 
-    }
-    return custo;
-}
+                double tempo_novo = calculaTempoVM(p, p.vet_tasks[k], p.vet_machine[j]);
+                double tempo_agora = S_atual.vet_tripla[i].vm_time_total;
+                double tempo_real = S_atual.time - tempo_agora + tempo_novo;
 
-Solution Swap_Machine(Solution S, Problem p){
-    double custo_atual = S.cost;
+                double custo_finan_novo = p.vet_machine[j].cost * p.vet_machine[j].slowdown * tempo_novo;
+                double custo_finan_agora = S_atual.vet_tripla[i].vm_cost_total;
+                double custo_finan_real = S_atual.cost_fin - custo_finan_agora + custo_finan_novo;
 
-    while (true){
-        Solution melhor_vizinho;
-        melhor_vizinho.cost = custo_atual;
+                Tripla vizinho;
+                vizinho.vm_cost_total = custo_finan_real;
+                vizinho.vm_time_total = tempo_real;
+                
+                vizinho.final_cost = normalizaUmCusto(vizinho,phi, p.max_fin_cost, p.max_runtime);
 
-        for(int i = 0; i < S.vet_tripla.size(); i++){ //Para cada tarefa da solução
-            for(int j = 0; j < p.vet_machine.size(); j++){ //Para cada VM possível
-                if(melhor_vizinho.vet_tripla[i].vm_id != p.vet_machine[j].id){ //Verifico se a VM não eh a mesma
-                    Solution vizinho = S;
-                    vizinho.vet_tripla[i].vm_id = p.vet_machine[j].id;
-                    vizinho.vet_tripla[i].vm_slowdown = p.vet_machine[j].slowdown;
-                    vizinho.vet_tripla[i].vm_time_total = calculaTempoVM1(p, p.vet_tasks[vizinho.vet_tripla[i].task_id], p.vet_machine[j]);
-                    vizinho.vet_tripla[i].vm_cost_total = p.vet_machine[j].cost * p.vet_machine[j].slowdown * vizinho.vet_tripla[i].vm_time_total;
-                    vizinho.cost = calculaCustoTotal1(vizinho);
-
-                    if(vizinho.cost < melhor_vizinho.cost){ //Se o custo do vizinho for melhor que o melhor vizinho encontrado
-                        melhor_vizinho = vizinho; //Atualiza o melhor vizinho
-                    }
+                if(vizinho.final_cost < S_atual.vet_tripla[i].final_cost){
+                    S_atual.vet_tripla[i].final_cost = vizinho.final_cost;
+                    S_atual.vet_tripla[i].vm_cost_total = vizinho.vm_cost_total;
+                    S_atual.vet_tripla[i].vm_time_total = vizinho.vm_time_total;
+                    S_atual.vet_tripla[i].vm_id = p.vet_machine[j].id;
+                    S_atual.vet_tripla[i].vm_slowdown = p.vet_machine[j].slowdown;
+                    return S_atual;
                 }
             }
         }
-        if(melhor_vizinho.cost >= custo_atual){ //Se o melhor vizinho não for melhor que o custo atual, sai do loop
-            return S; //Retorna a solução original
-        }
-        S = melhor_vizinho; //Atualiza a solução com o melhor vizinho encontrado
-        custo_atual = S.cost; //Atualiza o custo atual
     }
-
+    return S;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Solution Swap_Machine(Solution S, Problem p, float phi){
+//     double custo_atual = S.cost;
+
+//     while (true){
+//         Solution melhor_vizinho = S;
+//         melhor_vizinho.cost = custo_atual;
+
+//         for(int i = 0; i < S.vet_tripla.size(); i++){ //Para cada tarefa da solução
+//             if(S.vet_tripla[i].type == 1){ 
+//                 for(int j = 0; j < p.vet_machine.size(); j++){ //Para cada VM possível
+//                     if(S.vet_tripla[i].vm_id != p.vet_machine[j].id){ //Verifico se a VM não eh a mesma
+//                         Solution vizinho = S;
+//                         vizinho.vet_tripla[i].vm_id = p.vet_machine[j].id; //Troca a VM da tarefa
+//                         vizinho.vet_tripla[i].vm_slowdown = p.vet_machine[j].slowdown; //Atualiza o slowdown da VM
+//                         vizinho.vet_tripla[i].vm_time_total = calculaTempoVM(p, p.vet_tasks[vizinho.vet_tripla[i].task_id], p.vet_machine[j]); //Calcula o tempo total da VM
+//                         vizinho.vet_tripla[i].vm_cost_total = p.vet_machine[j].cost * p.vet_machine[j].slowdown * vizinho.vet_tripla[i].vm_time_total; //Calcula o custo total da VM
+//                         vizinho.vet_tripla[i].type = 1; //Atualiza o tipo da tarefa para VM
+//                         vizinho.vet_tripla = normalizaCustos(vizinho.vet_tripla, phi, p.max_fin_cost, p.max_runtime); //Normaliza os custos da solução vizinha
+//                         vizinho.cost = calculaCustoTotal(vizinho); //Calcula o custo total da solução vizinha
+
+
+//                         if(vizinho.cost < melhor_vizinho.cost){ //Se o custo do vizinho for melhor que o melhor vizinho encontrado
+//                             melhor_vizinho = vizinho; //Atualiza o melhor vizinho
+
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//         if(melhor_vizinho.cost > custo_atual){ //Se o melhor vizinho não for melhor que o custo atual, sai do loop
+//             return S; //Retorna a solução original
+//         }
+//         S = melhor_vizinho; //Atualiza a solução com o melhor vizinho encontrado
+//         custo_atual = S.cost; //Atualiza o custo atual
+//     }
+
+// }

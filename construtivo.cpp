@@ -5,6 +5,8 @@
 #include <iostream>
 #include <algorithm>
 #include "bibrand.c"
+#include <sys/resource.h> 
+#include <unistd.h>  // Adicione no topo
 
 using namespace std;
 
@@ -286,7 +288,6 @@ double calculaTempoVM(Problem p, Tasks task, Machine machine){
 //========================================================================================================================================
 
 double calculaMaxFinCost(Problem p) {
-<<<<<<< HEAD
     double max_fin_cost_FX = 0;
 
     for (int i = 0; i < p.vet_tasks.size(); i++) {
@@ -294,16 +295,12 @@ double calculaMaxFinCost(Problem p) {
     }
 
     double max_fin_cost_VM = 0;
-=======
-    double max_fin_cost = 0;
->>>>>>> d7ca24f320f8a460a19de21120c342369bd7c230
 
     Machine max_machine = p.vet_machine.back();
 
     for (int i = 0; i < p.vet_tasks.size(); i++) {
         double max_machine_time = calculaTempoVM(p, p.vet_tasks[i], max_machine);
         double max_machine_cost = max_machine.cost * max_machine.slowdown * max_machine_time;
-<<<<<<< HEAD
         max_fin_cost_VM += max_machine_cost;
     }
 
@@ -312,12 +309,6 @@ double calculaMaxFinCost(Problem p) {
     } else {
         return max_fin_cost_FX;
     }
-=======
-        max_fin_cost += max_machine_cost;
-    }
-
-    return max_fin_cost;
->>>>>>> d7ca24f320f8a460a19de21120c342369bd7c230
 }
 
 //========================================================================================================================================
@@ -332,8 +323,12 @@ double calculaMaxRuntime(Problem p) {
     return max_runtime;
 }
 
-<<<<<<< HEAD
 //========================================================================================================================================
-=======
-//========================================================================================================================================
->>>>>>> d7ca24f320f8a460a19de21120c342369bd7c230
+
+double normalizaUmCusto(Tripla T, float phi, double max_fin_cost, double max_runtine){
+    if(T.type == 1){
+        return phi * (T.task_time_total/max_runtine) + (1 - phi) * (T.task_p_config_cost/max_fin_cost);
+    }
+
+    return phi * (T.vm_time_total/max_runtine) + (1 - phi) * (T.vm_cost_total/max_fin_cost);
+}
