@@ -217,7 +217,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
 
     FILE * fs = fopen(caminho_resp_final, "w");
     if(!fs) exit(1);
-    fprintf(fs, "<Instância> \t <Custo_Financeiro_Melhor> \t <Tempo_Melhor> \t <Custo_Normalizado_Melhor> \t <Custo_Normalizado_Médio> \t <Tempo_CPU_Médio>\n");
+    fprintf(fs, "<Instância> \t <Custo_Financeiro_Melhor> \t <Tempo_Melhor> \t <Custo_Normalizado_Melhor> \t <Custo_Normalizado_Médio> \t <Tempo_CPU_Médio>\n \n");
     fclose(fs);
 
     FILE * fl = fopen(caminho_resp_geral, "w");
@@ -250,7 +250,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         double tempo_melhor = 0.0;
         double melhor_custo = __FLT_MAX__;
 
-        for(int i = 0; i < 10; i++){
+        for(int i = 0; i < 1; i++){
 
             Solution S, otima;
             float cost_otima = __FLT_MAX__;
@@ -292,6 +292,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         FILE * fs = fopen(caminho_resp_final, "a");
         if(!fs) exit(1);
         fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", arquivo, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_médio, tempo_CPU_médio);
+        fprintf(fs, "----------------------------SWAP MACHINE-----------------------------------------\n");
         fclose(fs);
 
         Solution S_bl = S_melhor;
@@ -300,16 +301,16 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
             S_bl = Swap_Machine(S_bl, p, phi);
             if(S_bl.cost < S_melhor.cost){
                 S_melhor = S_bl;
-                printf("AHHHHHHHHHHHHHHHHHH------IF");
             }
             else break;
         }
         while(1);
-        printf("AHHHHHHHHHHHHHHHHHH");
-        FILE * fm = fopen("Resultados/temp/res_final.txt", "w");
-        if(!fm) exit(1);
-        fprintf(fm, "%s\t %f\t %f\t %f\t %f\t %f\n", arquivo, S_melhor.cost_fin, S_melhor.time, S_melhor.cost, custo_médio, tempo_CPU_médio);
-        fclose(fm);
+
+        fs = fopen(caminho_resp_final, "a");
+        if(!fs) exit(1);
+        fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n \n \n", arquivo, S_melhor.cost_fin, S_melhor.time, S_melhor.cost, custo_médio, tempo_CPU_médio);
+        fprintf(fs, "====================================================================\n \n \n");
+        fclose(fs);
     }
     fclose(fp);
     return 0;

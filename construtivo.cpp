@@ -69,7 +69,7 @@ Solution Construtivo(float alpha, float phi ,int* seed,Problem p){
                 aux.task_id = TarefasViaveis[i].task_id;
                 aux.vm_id = p.vet_machine[j].id;
                 aux.vm_slowdown = p.vet_machine[j].slowdown;
-                aux.vm_time_total = calculaTempoVM(p,TarefasViaveis[i],p.vet_machine[j]); 
+                aux.vm_time_total = calculaTempoVM(p,TarefasViaveis[i],p.vet_machine[j])*p.vet_machine[j].slowdown; 
                 aux.vm_cost_total = p.vet_machine[j].cost * p.vet_machine[j].slowdown * aux.vm_time_total; //Verificar se o slowdown considera ja o tempo de leitura e escrita
                 aux.vm_cpu_time = TarefasViaveis[i].vm_cpu_time;
                 aux.type = 0;

@@ -1,18 +1,18 @@
 #include "construtivo.cpp"
 
 Solution Swap_Machine(Solution S, Problem p, float phi){
-    printf("HAHAHAHAHAHAHAH");
     Solution S_atual = S;
     for(int i = 0; i < S_atual.vet_tripla.size(); i++){
         if(S_atual.vet_tripla[i].type == 0){
             for(int j = 0; j < p.vet_machine.size(); j++){
                 if(S_atual.vet_tripla[i].vm_id == p.vet_machine[j].id) continue;
+                
                 int k;
                 for(k = 0; k < p.vet_tasks.size(); k++){
                     if (p.vet_tasks[k].task_id == S_atual.vet_tripla[i].task_id) break;
                 }
 
-                double tempo_novo = calculaTempoVM(p, p.vet_tasks[k], p.vet_machine[j]);
+                double tempo_novo = calculaTempoVM(p, p.vet_tasks[k], p.vet_machine[j])*p.vet_machine[j].slowdown;
                 double tempo_agora = S_atual.vet_tripla[i].vm_time_total;
                 double tempo_real = S_atual.time - tempo_agora + tempo_novo;
 
@@ -21,8 +21,8 @@ Solution Swap_Machine(Solution S, Problem p, float phi){
                 double custo_finan_real = S_atual.cost_fin - custo_finan_agora + custo_finan_novo;
 
                 Tripla vizinho;
-                vizinho.vm_cost_total = custo_finan_real;
-                vizinho.vm_time_total = tempo_real;
+                vizinho.vm_cost_total = custo_finan_novo;
+                vizinho.vm_time_total = tempo_novo;
                 
                 vizinho.final_cost = normalizaUmCusto(vizinho,phi, p.max_fin_cost, p.max_runtime);
 
@@ -32,6 +32,9 @@ Solution Swap_Machine(Solution S, Problem p, float phi){
                     S_atual.vet_tripla[i].vm_time_total = vizinho.vm_time_total;
                     S_atual.vet_tripla[i].vm_id = p.vet_machine[j].id;
                     S_atual.vet_tripla[i].vm_slowdown = p.vet_machine[j].slowdown;
+                    S_atual.cost = calculaCustoTotal(S_atual);
+                    S_atual.cost_fin = calculaCustoFin(S_atual);
+                    S_atual.time = calculaTempoTotal(S_atual);
                     return S_atual;
                 }
             }
