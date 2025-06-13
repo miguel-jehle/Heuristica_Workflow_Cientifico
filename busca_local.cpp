@@ -14,12 +14,8 @@ Solution Swap_Machine(Solution S, Problem p, float phi){
                 }
 
                 double tempo_novo = calculaTempoVM(p, p.vet_tasks[k], p.vet_machine[j])*p.vet_machine[j].slowdown;
-                double tempo_agora = S_atual.vet_tripla[i].vm_time_total;
-                double tempo_real = S_atual.time - tempo_agora + tempo_novo;
-
+                
                 double custo_finan_novo = p.vet_machine[j].cost * p.vet_machine[j].slowdown * tempo_novo;
-                double custo_finan_agora = S_atual.vet_tripla[i].vm_cost_total;
-                double custo_finan_real = S_atual.cost_fin - custo_finan_agora + custo_finan_novo;
 
                 Tripla vizinho;
                 vizinho.vm_cost_total = custo_finan_novo;
@@ -37,6 +33,44 @@ Solution Swap_Machine(Solution S, Problem p, float phi){
                     S_atual.cost_fin = calculaCustoFin(S_atual);
                     S_atual.time = calculaTempoTotal(S_atual);
                     return S_atual;
+                }
+            }
+        }
+    }
+    return S;
+}
+
+Solution Swap_Config(Solution S, Problem p, float phi){
+    Solution S_atual = S;
+    for(int i = 0; i < S_atual.vet_tripla.size(); i++){
+        if(S_atual.vet_tripla[i].type == 1){ //Se for FX
+            for(int j = 0; j < p.vet_tasks.size(); j++){
+               if(p.vet_tasks[j].task_id == S_atual.vet_tripla[i].task_id){
+                    for(int k = 0; k < p.vet_tasks[j].vet_config.size(); k++){
+                        if(p.vet_tasks[j].vet_config[k].config_id == S_atual.vet_tripla[i].config_id) continue;
+
+                        double tempo_novo = p.vet_tasks[j].vet_config[k].task_time_total;
+
+                        double custo_finan_novo = p.vet_tasks[j].vet_config[k].task_p_config_cost;
+
+                        Tripla vizinho;
+                        vizinho.task_p_config_cost = custo_finan_novo;
+                        vizinho.task_time_total = tempo_novo;
+
+                        vizinho.final_cost = normalizaUmCusto(vizinho,phi, p.max_fin_cost, p.max_runtime);
+
+                        if(vizinho.final_cost < S_atual.vet_tripla[i].final_cost){
+                        S_atual.vet_tripla[i].final_cost = vizinho.final_cost;
+                        S_atual.vet_tripla[i].task_p_config_cost = vizinho.task_p_config_cost;
+                        S_atual.vet_tripla[i].task_time_total = vizinho.task_time_total;
+                        S_atual.vet_tripla[i].config_id = p.vet_tasks[j].vet_config[k].config_id;
+                        S_atual.cost = calculaCustoTotal(S_atual);
+                        S_atual.cost_fin = calculaCustoFin(S_atual);
+                        S_atual.time = calculaTempoTotal(S_atual);
+                        return S_atual;
+                        }
+
+                    }
                 }
             }
         }

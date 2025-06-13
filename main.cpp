@@ -225,7 +225,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
     fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\t <Custo_Financeiro> \t <Tempo_Workflow>\n");
     fclose(fl);
 
-    FILE * fp = fopen("Instancias/sumario.txt", "r");
+    FILE * fp = fopen("Instancias/teste.txt", "r");
     if(!fp) exit(1);
     char arquivo[200];
 
@@ -298,7 +298,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         Solution S_bl = S_melhor;
 
         do{
-            S_bl = Swap_Machine(S_bl, p, phi);
+            S_bl = Swap_Config(S_bl, p, phi);
             if(S_bl.cost < S_melhor.cost){
                 S_melhor = S_bl;
             }
