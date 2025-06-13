@@ -1,4 +1,5 @@
 #include "construtivo.cpp"
+#include "Base.h"
 
 Solution Swap_Machine(Solution S, Problem p, float phi){
     Solution S_atual = S;

@@ -1,5 +1,5 @@
 #include "busca_local.cpp"
-
+#include "Base.h"
 
 
 void Tempo_CPU_Sistema(double *seg_CPU_total, double *seg_sistema_total)
@@ -225,7 +225,7 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
     fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\t <Custo_Financeiro> \t <Tempo_Workflow>\n");
     fclose(fl);
 
-    FILE * fp = fopen("Instancias/teste.txt", "r");
+    FILE * fp = fopen("Instancias/sumario.txt", "r");
     if(!fp) exit(1);
     char arquivo[200];
 
