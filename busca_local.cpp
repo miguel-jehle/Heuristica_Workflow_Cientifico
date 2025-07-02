@@ -54,8 +54,8 @@ Solution Swap_Config(Solution S, Problem p, float phi){
                         double custo_finan_novo = p.vet_tasks[j].vet_config[k].task_p_config_cost;
 
                         Tripla vizinho;
-                        vizinho.task_p_config_cost = custo_finan_novo;
                         vizinho.task_time_total = tempo_novo;
+                        vizinho.task_p_config_cost = custo_finan_novo;
 
                         vizinho.final_cost = normalizaUmCusto(vizinho,phi, p.max_fin_cost, p.max_runtime);
 
@@ -67,11 +67,58 @@ Solution Swap_Config(Solution S, Problem p, float phi){
                         S_atual.cost = calculaCustoTotal(S_atual);
                         S_atual.cost_fin = calculaCustoFin(S_atual);
                         S_atual.time = calculaTempoTotal(S_atual);
+                        printf("%f          %f\n\n", S_atual.cost_fin, S_atual.time);
                         return S_atual;
                         }
 
                     }
                 }
+            }
+        }
+    }
+    return S;
+}
+
+// Tenta trocar a máquina de uma task por qualquer configuração possível que melhore o custo
+Solution Try_Swap_MachineToConfig(Solution S, Problem p, int idx_task, float phi) {
+    Solution S_atual = S;
+    int task_id = S_atual.vet_tripla[idx_task].task_id;
+    // Procura a task correspondente no problema
+    for (int j = 0; j < p.vet_tasks.size(); j++) {
+        if (p.vet_tasks[j].task_id == task_id) {
+            // Para cada configuração possível
+            for (int k = 0; k < p.vet_tasks[j].vet_config.size(); k++) {
+                // Se já está nessa config, pula
+                if (S_atual.vet_tripla[idx_task].type == 1 && S_atual.vet_tripla[idx_task].config_id == p.vet_tasks[j].vet_config[k].config_id)
+                    continue;
+                Tripla vizinho = S_atual.vet_tripla[idx_task];
+                vizinho.type = 1;
+                vizinho.config_id = p.vet_tasks[j].vet_config[k].config_id;
+                vizinho.task_time_total = p.vet_tasks[j].vet_config[k].task_time_total;
+                vizinho.task_p_config_cost = p.vet_tasks[j].vet_config[k].task_p_config_cost;
+                vizinho.final_cost = normalizaUmCusto(vizinho, phi, p.max_fin_cost, p.max_runtime);
+                // Se for melhor, retorna solução modificada
+                if (vizinho.final_cost < S_atual.vet_tripla[idx_task].final_cost) {
+                    S_atual.vet_tripla[idx_task] = vizinho;
+                    S_atual.cost = calculaCustoTotal(S_atual);
+                    S_atual.cost_fin = calculaCustoFin(S_atual);
+                    S_atual.time = calculaTempoTotal(S_atual);
+                    return S_atual;
+                }
+            }
+        }
+    }
+    return S;
+}
+
+// Busca local: tenta trocar a máquina de uma task por uma configuração melhor
+Solution Swap_MachineToConfig(Solution S, Problem p, float phi) {
+    Solution S_atual = S;
+    for (int i = 0; i < S_atual.vet_tripla.size(); i++) {
+        if (S_atual.vet_tripla[i].type == 0) { // Se está rodando em máquina
+            Solution S_vizinho = Try_Swap_MachineToConfig(S_atual, p, i, phi);
+            if (S_vizinho.cost < S_atual.cost) {
+                return S_vizinho;
             }
         }
     }

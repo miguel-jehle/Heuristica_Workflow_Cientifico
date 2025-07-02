@@ -292,13 +292,31 @@ int main(int argc, char** argv){// caminho_resp phi alpha repeticoes
         FILE * fs = fopen(caminho_resp_final, "a");
         if(!fs) exit(1);
         fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", arquivo, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_médio, tempo_CPU_médio);
-        fprintf(fs, "----------------------------SWAP MACHINE-----------------------------------------\n");
+        fprintf(fs, "----------------------------BUSCA LOCAL(SWAP MACHINE e SWAP CONFIG)-----------------------------------------\n");
         fclose(fs);
 
         Solution S_bl = S_melhor;
 
         do{
             S_bl = Swap_Config(S_bl, p, phi);
+            if(S_bl.cost < S_melhor.cost){
+                S_melhor = S_bl;
+            }
+            else break;
+        }
+        while(1);
+
+        do{
+            S_bl = Swap_Machine(S_bl, p, phi);
+            if(S_bl.cost < S_melhor.cost){
+                S_melhor = S_bl;
+            }
+            else break;
+        }
+        while(1);
+
+        do{
+            S_bl = Swap_MachineToConfig(S_bl, p, phi);
             if(S_bl.cost < S_melhor.cost){
                 S_melhor = S_bl;
             }
