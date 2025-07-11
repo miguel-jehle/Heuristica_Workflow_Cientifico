@@ -79,16 +79,12 @@ Solution Swap_Config(Solution S, Problem p, float phi){
     return S;
 }
 
-// Tenta trocar a máquina de uma task por qualquer configuração possível que melhore o custo
 Solution Try_Swap_MachineToConfig(Solution S, Problem p, int idx_task, float phi) {
     Solution S_atual = S;
     int task_id = S_atual.vet_tripla[idx_task].task_id;
-    // Procura a task correspondente no problema
     for (int j = 0; j < p.vet_tasks.size(); j++) {
         if (p.vet_tasks[j].task_id == task_id) {
-            // Para cada configuração possível
             for (int k = 0; k < p.vet_tasks[j].vet_config.size(); k++) {
-                // Se já está nessa config, pula
                 if (S_atual.vet_tripla[idx_task].type == 1 && S_atual.vet_tripla[idx_task].config_id == p.vet_tasks[j].vet_config[k].config_id)
                     continue;
                 Tripla vizinho = S_atual.vet_tripla[idx_task];
@@ -97,7 +93,6 @@ Solution Try_Swap_MachineToConfig(Solution S, Problem p, int idx_task, float phi
                 vizinho.task_time_total = p.vet_tasks[j].vet_config[k].task_time_total;
                 vizinho.task_p_config_cost = p.vet_tasks[j].vet_config[k].task_p_config_cost;
                 vizinho.final_cost = normalizaUmCusto(vizinho, phi, p.max_fin_cost, p.max_runtime);
-                // Se for melhor, retorna solução modificada
                 if (vizinho.final_cost < S_atual.vet_tripla[idx_task].final_cost) {
                     S_atual.vet_tripla[idx_task] = vizinho;
                     S_atual.cost = calculaCustoTotal(S_atual);
@@ -111,11 +106,10 @@ Solution Try_Swap_MachineToConfig(Solution S, Problem p, int idx_task, float phi
     return S;
 }
 
-// Busca local: tenta trocar a máquina de uma task por uma configuração melhor
 Solution Swap_MachineToConfig(Solution S, Problem p, float phi) {
     Solution S_atual = S;
     for (int i = 0; i < S_atual.vet_tripla.size(); i++) {
-        if (S_atual.vet_tripla[i].type == 0) { // Se está rodando em máquina
+        if (S_atual.vet_tripla[i].type == 0) {
             Solution S_vizinho = Try_Swap_MachineToConfig(S_atual, p, i, phi);
             if (S_vizinho.cost < S_atual.cost) {
                 return S_vizinho;
@@ -125,68 +119,43 @@ Solution Swap_MachineToConfig(Solution S, Problem p, float phi) {
     return S;
 }
 
+Solution Try_Swap_ConfigToMachine(Solution S, Problem p, int idx_task, float phi) {
+    Solution S_atual = S;
+    int task_id = S_atual.vet_tripla[idx_task].task_id;
+    for (int j = 0; j < p.vet_tasks.size(); j++) {
+        if (p.vet_tasks[j].task_id == task_id) {
+            for (int k = 0; k < p.vet_machine.size(); k++) {
+                if (S_atual.vet_tripla[idx_task].type == 0 && S_atual.vet_tripla[idx_task].vm_id == p.vet_machine[k].id)
+                    continue;
+                Tripla vizinho = S_atual.vet_tripla[idx_task];
+                vizinho.type = 0;
+                vizinho.vm_id = p.vet_machine[k].id;
+                vizinho.vm_slowdown = p.vet_machine[k].slowdown;
+                vizinho.vm_time_total = calculaTempoVM(p, p.vet_tasks[j], p.vet_machine[k]);
+                vizinho.vm_cost_total = p.vet_machine[k].cost * p.vet_machine[k].slowdown * vizinho.vm_time_total;
+                vizinho.final_cost = normalizaUmCusto(vizinho, phi, p.max_fin_cost, p.max_runtime);
+                if (vizinho.final_cost < S_atual.vet_tripla[idx_task].final_cost) {
+                    S_atual.vet_tripla[idx_task] = vizinho;
+                    S_atual.cost = calculaCustoTotal(S_atual);
+                    S_atual.cost_fin = calculaCustoFin(S_atual);
+                    S_atual.time = calculaTempoTotal(S_atual);
+                    return S_atual;
+                }
+            }
+        }
+    }
+    return S;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// Solution Swap_Machine(Solution S, Problem p, float phi){
-//     double custo_atual = S.cost;
-
-//     while (true){
-//         Solution melhor_vizinho = S;
-//         melhor_vizinho.cost = custo_atual;
-
-//         for(int i = 0; i < S.vet_tripla.size(); i++){ //Para cada tarefa da solução
-//             if(S.vet_tripla[i].type == 1){ 
-//                 for(int j = 0; j < p.vet_machine.size(); j++){ //Para cada VM possível
-//                     if(S.vet_tripla[i].vm_id != p.vet_machine[j].id){ //Verifico se a VM não eh a mesma
-//                         Solution vizinho = S;
-//                         vizinho.vet_tripla[i].vm_id = p.vet_machine[j].id; //Troca a VM da tarefa
-//                         vizinho.vet_tripla[i].vm_slowdown = p.vet_machine[j].slowdown; //Atualiza o slowdown da VM
-//                         vizinho.vet_tripla[i].vm_time_total = calculaTempoVM(p, p.vet_tasks[vizinho.vet_tripla[i].task_id], p.vet_machine[j]); //Calcula o tempo total da VM
-//                         vizinho.vet_tripla[i].vm_cost_total = p.vet_machine[j].cost * p.vet_machine[j].slowdown * vizinho.vet_tripla[i].vm_time_total; //Calcula o custo total da VM
-//                         vizinho.vet_tripla[i].type = 1; //Atualiza o tipo da tarefa para VM
-//                         vizinho.vet_tripla = normalizaCustos(vizinho.vet_tripla, phi, p.max_fin_cost, p.max_runtime); //Normaliza os custos da solução vizinha
-//                         vizinho.cost = calculaCustoTotal(vizinho); //Calcula o custo total da solução vizinha
-
-
-//                         if(vizinho.cost < melhor_vizinho.cost){ //Se o custo do vizinho for melhor que o melhor vizinho encontrado
-//                             melhor_vizinho = vizinho; //Atualiza o melhor vizinho
-
-//                         }
-//                     }
-//                 }
-//             }
-//         }
-//         if(melhor_vizinho.cost > custo_atual){ //Se o melhor vizinho não for melhor que o custo atual, sai do loop
-//             return S; //Retorna a solução original
-//         }
-//         S = melhor_vizinho; //Atualiza a solução com o melhor vizinho encontrado
-//         custo_atual = S.cost; //Atualiza o custo atual
-//     }
-
-// }
+Solution Swap_ConfigToMachine(Solution S, Problem p, float phi) {
+    Solution S_atual = S;
+    for (int i = 0; i < S_atual.vet_tripla.size(); i++) {
+        if (S_atual.vet_tripla[i].type == 1) {
+            Solution S_vizinho = Try_Swap_ConfigToMachine(S_atual, p, i, phi);
+            if (S_vizinho.cost < S_atual.cost) {
+                return S_vizinho;
+            }
+        }
+    }
+    return S;
+}
