@@ -1,4 +1,5 @@
-#include "construtivo.cpp"
+#include "busca_local.h"
+#include "construtivo.h"  // Para funções de cálculo
 #include "Base.h"
 
 Solution Swap_Machine(Solution S, Problem p, float phi){

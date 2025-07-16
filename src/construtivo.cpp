@@ -1,42 +1,15 @@
+#include "construtivo.h"
 #include "Base.h"
+#include "bibrand.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
 #include <algorithm>
-#include "bibrand.c"
 #include <sys/resource.h> 
-#include <unistd.h>  // Adicione no topo
+#include <unistd.h>
 
 using namespace std;
-
-//========================================================================================================================================
-
-vector<Tasks> atualizaTarefasViaveis(vector<Tasks> TarefasViaveis, vector<Tasks> vet_tasks,vector<Data> vet_data);  //FUNÇÃO IMPLEMENTADA!
-
-vector<Data> atualizaDisponibilidade(vector<Data> vet_data, vector<Tasks> vet_task ,Tripla candidato); //FUNÇÃO IMPLEMENTADA!
-
-bool verificaDisponibilidade(int id, vector<Data> vet_data); //FUNÇÃO IMPLEMENTADA!
-
-vector<Tripla> ordenaCusto(vector<Tripla> LC);//FUNÇÃO IMPLEMENTADA!
-
-vector<Tripla> criaLRC(vector <Tripla> LC, int corte);//FUNÇÃO IMPLEMENTADA!
-
-Tripla selecionaAleatoriamente(vector<Tripla> LRC, int* seed);//FUNÇÃO IMPLEMENTADA!
-
-vector<Tasks> removeTarefa(vector<Tasks> TarefasViaveis, Tripla candidato);  //FUNÇÃO IMPLEMENTADA!
-
-vector<Tripla> normalizaCustos( vector <Tripla> LC, float phi, double max_fin_cost, double max_runtime); //FUNÇÃO IMPLEMENTADA!
-
-vector<Tasks> atualizaEscolhida(vector<Tasks> vet_tasks, Tripla candidato); //FUNÇÃO IMPLEMENTADA!
-
-double calculaCustoTotal(Solution S);
-
-double calculaTempoTotal(Solution S);
-
-double calculaTempoVM(Problem p, Tasks task, Machine machine);
-
-double calculaCustoFin(Solution S);
 
 //========================================================================================================================================
 
