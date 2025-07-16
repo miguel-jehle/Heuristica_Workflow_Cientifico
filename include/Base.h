@@ -77,15 +77,15 @@ struct Problem{
 struct Tripla{
     //Infos gerais
     int task_id;
-    double final_cost = 0; //Campo que faz a normalização do custo total da tarefa com relação ao custo total das tarefas e o tempo.
+    double cost = 0; //Campo que faz a normalização do custo total da tarefa com relação ao custo total das tarefas e o tempo.
+    int type; //0 - VM or 1 - FX
 
     //Infos para FX
     int  config_id;
 
     //Infos para VM
     int vm_id;
-    int type; //0 - VM or 1 - FX
-
+    
     //Infos auxiliares para otimização
     double task_p_config_cost;
     double task_time_total;
@@ -99,5 +99,5 @@ struct Solution{
     vector<Tripla> vet_tripla;
     double cost;
     double time;
-    double cost_fin;
+    double financial_cost;
 };
