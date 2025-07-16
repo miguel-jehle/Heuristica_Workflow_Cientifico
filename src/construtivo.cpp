@@ -13,10 +13,10 @@ using namespace std;
 
 //========================================================================================================================================
 
-Solution Construtivo(float alpha, float phi ,int* seed,Problem p){
+Solution constructiveHeuristic(float alpha, float phi ,int* seed,Problem p){
     Solution S; // S <-- { }
     vector<Tasks> TarefasViaveis;                               // Cria a lista de tasks que podem ser executadas.
-    TarefasViaveis = atualizaTarefasViaveis(TarefasViaveis,p.vet_tasks,p.vet_data);    // Atualiza neste caso serve para gerá-la pela primeira vez
+    TarefasViaveis = updateFeasibleTasks(TarefasViaveis,p.vet_tasks,p.vet_data);    // Atualiza neste caso serve para gerá-la pela primeira vez
     Tripla aux;
     
     while(!TarefasViaveis.empty()){ //Enquanto S nao esta completo faça
@@ -42,7 +42,7 @@ Solution Construtivo(float alpha, float phi ,int* seed,Problem p){
                 aux.task_id = TarefasViaveis[i].task_id;
                 aux.vm_id = p.vet_machine[j].id;
                 aux.vm_slowdown = p.vet_machine[j].slowdown;
-                aux.vm_time_total = calculaTempoVM(p,TarefasViaveis[i],p.vet_machine[j]); 
+                aux.vm_time_total = calculateVMTime(p,TarefasViaveis[i],p.vet_machine[j]); 
                 aux.vm_cost_total = p.vet_machine[j].cost * aux.vm_time_total; //Verificar se o slowdown considera ja o tempo de leitura e escrita
                 aux.vm_cpu_time = TarefasViaveis[i].vm_cpu_time;
                 aux.type = 0;
@@ -51,33 +51,33 @@ Solution Construtivo(float alpha, float phi ,int* seed,Problem p){
         }
 
         //Bloco correspondente ao algortimo original
-        LC = normalizaCustos(LC, phi,p.max_fin_cost, p.max_runtime);
-        LC = ordenaCusto(LC);
+        LC = normalizeCosts(LC, phi,p.max_fin_cost, p.max_runtime);
+        LC = sortByCost(LC);
         int corte = LC.size() * alpha;
         if (!corte) corte++;
-        vector<Tripla> LRC = criaLRC(LC, corte);
-        Tripla candidato = selecionaAleatoriamente(LRC,seed);
+        vector<Tripla> LRC = createRCL(LC, corte);
+        Tripla candidato = selectRandomCandidate(LRC,seed);
         //Aqui faço a verificação da maquina previamente comprada por meio do campo temp_rest.
 
         //Para todas as VM's contratadas que tem um tempo restante diferente de zero, se existe alguma tarefa (candidato) que cabe dentro deste intervalo restante.
         S.vet_tripla.push_back(candidato);
 
         //Ações necessaárias para adaptar o construtivo para esse problema.
-        p.vet_data = atualizaDisponibilidade(p.vet_data,p.vet_tasks, candidato); //Atualiza a disponibilidade dos dados
-        //TarefasViaveis = removeTarefa(TarefasViaveis, candidato); //Por conta dessa remoção, para não quebrar a lógica, precisei criar uma flag para verificar se a tarefa 
-        p.vet_tasks = atualizaEscolhida(p.vet_tasks, candidato); //Atualiza a flag de escolhida
+        p.vet_data = updateDataAvailability(p.vet_data,p.vet_tasks, candidato); //Atualiza a disponibilidade dos dados
+        //TarefasViaveis = removeTask(TarefasViaveis, candidato); //Por conta dessa remoção, para não quebrar a lógica, precisei criar uma flag para verificar se a tarefa 
+        p.vet_tasks = markTaskAsChosen(p.vet_tasks, candidato); //Atualiza a flag de escolhida
         TarefasViaveis.clear(); //Limpa a lista de tarefas viáveis
-        TarefasViaveis = atualizaTarefasViaveis(TarefasViaveis,p.vet_tasks,p.vet_data); //Atualiza a lista de tarefas viáveis
+        TarefasViaveis = updateFeasibleTasks(TarefasViaveis,p.vet_tasks,p.vet_data); //Atualiza a lista de tarefas viáveis
     }
-    S.cost_fin = calculaCustoFin(S);
-    S.cost = calculaCustoTotal(S);
-    S.time = calculaTempoTotal(S);
+    S.financial_cost = calculateFinancialCost(S);
+    S.cost = calculateTotalCost(S);
+    S.time = calculateTotalTime(S);
     return S;
 }
 
 //========================================================================================================================================
 
-vector<Tasks> removeTarefa(vector<Tasks> TarefasViaveis, Tripla candidato){  //Percorro a lista de tarefas viáveis e removo a tarefa que foi selecionada baseado no task id, pois se escolhi uma task, independente da configuração, ela não pode ser escolhida novamente.
+vector<Tasks> removeTask(vector<Tasks> TarefasViaveis, Tripla candidato){  //Percorro a lista de tarefas viáveis e removo a tarefa que foi selecionada baseado no task id, pois se escolhi uma task, independente da configuração, ela não pode ser escolhida novamente.
     for(int i = 0; i < TarefasViaveis.size(); i++){
         if(TarefasViaveis[i].task_id == candidato.task_id){
             TarefasViaveis.erase(TarefasViaveis.begin() + i);
@@ -89,14 +89,14 @@ vector<Tasks> removeTarefa(vector<Tasks> TarefasViaveis, Tripla candidato){  //P
 
 //========================================================================================================================================
 
-Tripla selecionaAleatoriamente(vector<Tripla> LRC, int* seed){
+Tripla selectRandomCandidate(vector<Tripla> LRC, int* seed){
     int aleatorio = get_rand_ij(seed,0,LRC.size()-1); //Gera um número aleatório entre 0 e o tamanho da lista LRC já o resto da divisão pelo tamanho da lista garante que o número gerado esteja dentro do intervalo da lista.
     return LRC[aleatorio];
 }
 
 //========================================================================================================================================
 
-vector<Tripla> criaLRC(vector <Tripla> LC, int corte){
+vector<Tripla> createRCL(vector <Tripla> LC, int corte){
     vector<Tripla> LRC;
     for(int i = 0; i < corte; i++){
         LRC.push_back(LC[i]);
@@ -106,21 +106,21 @@ vector<Tripla> criaLRC(vector <Tripla> LC, int corte){
 
 //========================================================================================================================================
 
-vector<Tripla> ordenaCusto(vector<Tripla> LC){ 
+vector<Tripla> sortByCost(vector<Tripla> LC){ 
     sort(LC.begin(), LC.end(), [](const Tripla &a, const Tripla &b) { //Os parametros do sort são o inicio e o fim do vetor e uma condição de ordenação que neste caso utilizei uma função lambda.
-        return a.final_cost < b.final_cost;
+        return a.cost < b.cost;
     });
     return LC;
 }
 
 //========================================================================================================================================
 
-vector<Tasks> atualizaTarefasViaveis(vector<Tasks> TarefasViaveis, vector<Tasks> vet_tasks, vector<Data> vet_data) {
+vector<Tasks> updateFeasibleTasks(vector<Tasks> TarefasViaveis, vector<Tasks> vet_tasks, vector<Data> vet_data) {
     for (int i = 0; i < vet_tasks.size(); i++) {
         if (vet_tasks[i].escolhida) continue; // Se a tarefa já foi escolhida, passa para a próxima.
         bool todosDisponiveis = true;
         for (int j = 0; j < vet_tasks[i].n_input; j++) {
-            if (!verificaDisponibilidade(vet_tasks[i].id_inputs[j], vet_data)) {
+            if (!checkAvailability(vet_tasks[i].id_inputs[j], vet_data)) {
                 todosDisponiveis = false;
                 break;
             }
@@ -134,7 +134,7 @@ vector<Tasks> atualizaTarefasViaveis(vector<Tasks> TarefasViaveis, vector<Tasks>
 
 //========================================================================================================================================
 
-bool verificaDisponibilidade(int id, vector<Data> vet_data) {
+bool checkAvailability(int id, vector<Data> vet_data) {
     for (int i = 0; i < vet_data.size(); i++) {
         if (vet_data[i].data_id == id) {
             if (vet_data[i].disponivel || vet_data[i].is_static) {
@@ -147,7 +147,7 @@ bool verificaDisponibilidade(int id, vector<Data> vet_data) {
 
 //========================================================================================================================================
 
-vector<Data> atualizaDisponibilidade(vector<Data> vet_data, vector<Tasks> vet_task, Tripla candidato){
+vector<Data> updateDataAvailability(vector<Data> vet_data, vector<Tasks> vet_task, Tripla candidato){
     for(int i = 0; i < vet_task.size(); i++){
         if(vet_task[i].task_id == candidato.task_id){
             for(int j = 0; j < vet_task[i].n_output; j++){
@@ -164,7 +164,7 @@ vector<Data> atualizaDisponibilidade(vector<Data> vet_data, vector<Tasks> vet_ta
 
 //========================================================================================================================================
 
-vector<Tasks> atualizaEscolhida(vector<Tasks> vet_tasks, Tripla candidato){
+vector<Tasks> markTaskAsChosen(vector<Tasks> vet_tasks, Tripla candidato){
     for(int i = 0; i < vet_tasks.size(); i++){
         if(vet_tasks[i].task_id == candidato.task_id){
             vet_tasks[i].escolhida = true;
@@ -176,13 +176,13 @@ vector<Tasks> atualizaEscolhida(vector<Tasks> vet_tasks, Tripla candidato){
 
 //========================================================================================================================================
 
-vector <Tripla> normalizaCustos(vector <Tripla> LC, float phi, double max_fin_cost, double max_runtine){
+vector <Tripla> normalizeCosts(vector <Tripla> LC, float phi, double max_fin_cost, double max_runtine){
     for(int i = 0; i < LC.size(); i++){
         if(LC[i].type == 1){
-            LC[i].final_cost = phi * (LC[i].task_time_total/max_runtine) + (1 - phi) * (LC[i].task_p_config_cost/max_fin_cost);
+            LC[i].cost = phi * (LC[i].task_time_total/max_runtine) + (1 - phi) * (LC[i].task_p_config_cost/max_fin_cost);
         }
         else{
-            LC[i].final_cost = phi * (LC[i].vm_time_total/max_runtine) + (1 - phi) * (LC[i].vm_cost_total/max_fin_cost);
+            LC[i].cost = phi * (LC[i].vm_time_total/max_runtine) + (1 - phi) * (LC[i].vm_cost_total/max_fin_cost);
         }
     }
     return LC;
@@ -190,24 +190,24 @@ vector <Tripla> normalizaCustos(vector <Tripla> LC, float phi, double max_fin_co
 
 //========================================================================================================================================
 
-void printaSolucao(Solution S){
+void printSolution(Solution S){
     
     cout << S.cost << endl;
 }
 
 //========================================================================================================================================
 
-double calculaCustoTotal(Solution S){
+double calculateTotalCost(Solution S){
     double custo = 0;
     for(int i = 0; i < S.vet_tripla.size(); i++){
-        custo += S.vet_tripla[i].final_cost; 
+        custo += S.vet_tripla[i].cost; 
     }
     return custo;
 }
 
 //========================================================================================================================================
 
-double calculaTempoTotal(Solution S){
+double calculateTotalTime(Solution S){
     double tempo = 0;
     for(int i = 0; i < S.vet_tripla.size(); i++){
         if(S.vet_tripla[i].type == 1){
@@ -222,7 +222,7 @@ double calculaTempoTotal(Solution S){
 
 //========================================================================================================================================
 
-double calculaCustoFin(Solution S){
+double calculateFinancialCost(Solution S){
     double custo_fin = 0;
     for(int i = 0; i < S.vet_tripla.size(); i++){
         if(S.vet_tripla[i].type == 1){
@@ -237,7 +237,7 @@ double calculaCustoFin(Solution S){
 
 //=======================================================================================================================================================
 
-double calculaTempoVM(Problem p, Tasks task, Machine machine){
+double calculateVMTime(Problem p, Tasks task, Machine machine){
     //calcular o custo sendo (VM_CPU_time + tempo de leitura + tempo saidas)
     double tempo = 0;
     for(int i = 0; i < task.id_inputs.size(); i++){
@@ -260,7 +260,7 @@ double calculaTempoVM(Problem p, Tasks task, Machine machine){
 
 //========================================================================================================================================
 
-double calculaMaxFinCost(Problem p) {
+double calculateMaxFinancialCost(Problem p) {
     double max_fin_cost_FX = 0;
 
     for (int i = 0; i < p.vet_tasks.size(); i++) {
@@ -272,7 +272,7 @@ double calculaMaxFinCost(Problem p) {
     Machine max_machine = p.vet_machine.back();
 
     for (int i = 0; i < p.vet_tasks.size(); i++) {
-        double max_machine_time = calculaTempoVM(p, p.vet_tasks[i], max_machine);
+        double max_machine_time = calculateVMTime(p, p.vet_tasks[i], max_machine);
         double max_machine_cost = max_machine.cost * max_machine.slowdown * max_machine_time;
         max_fin_cost_VM += max_machine_cost;
     }
@@ -286,7 +286,7 @@ double calculaMaxFinCost(Problem p) {
 
 //========================================================================================================================================
 
-double calculaMaxRuntime(Problem p) {
+double calculateMaxRuntime(Problem p) {
     double max_runtime = 0;
 
     for (int i = 0; i < p.vet_tasks.size(); i++) {
@@ -298,7 +298,7 @@ double calculaMaxRuntime(Problem p) {
 
 //========================================================================================================================================
 
-double normalizaUmCusto(Tripla T, float phi, double max_fin_cost, double max_runtine){
+double normalizeCandidateCost(Tripla T, float phi, double max_fin_cost, double max_runtine){
     if(T.type == 1){
         return phi * (T.task_time_total/max_runtine) + (1 - phi) * (T.task_p_config_cost/max_fin_cost);
     }

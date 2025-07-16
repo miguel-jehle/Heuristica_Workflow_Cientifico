@@ -1,13 +1,14 @@
 #include "utils.h"
 #include "construtivo.h"  // Para funções de cálculo
 #include "Base.h"
+#include "busca_local.h"  // Para funções de busca local
 #include <sys/resource.h>
 #include <cstring>
 #include <iostream>
 
 using namespace std;
 
-void Tempo_CPU_Sistema(double *seg_CPU_total, double *seg_sistema_total) {
+void getCPUTime(double *seg_CPU_total, double *seg_sistema_total) {
     long seg_CPU, seg_sistema, mseg_CPU, mseg_sistema;
     struct rusage ptempo;
 
@@ -22,7 +23,7 @@ void Tempo_CPU_Sistema(double *seg_CPU_total, double *seg_sistema_total) {
     *seg_sistema_total = (seg_sistema + 0.000001 * mseg_sistema);
 }
 
-Problem le_dados(const char* arquivo) {
+Problem readData(const char* arquivo) {
     FILE * fp = fopen(arquivo, "r");
     if(!fp) exit(1);
     char temp[200], c, temp2[200], temp3[200];
@@ -113,7 +114,7 @@ Problem le_dados(const char* arquivo) {
     return p;
 }
 
-void printa_dados(Problem p) {
+void printProblem(Problem p) {
     printf(" #<#tasks> <#config> <#data> <#vms> <#buckets> <#bucket_ranges> <max_running_time> <max_financial_cost>\n");
     printf(" %d     %d     %d     %d     %d     %d     %lf    %lf\n\n", p.tasks,p.config, p.data, p.vms, p.buckets, p.bucket_ranges, p.max_runtime, p.max_fin_cost);
 
@@ -172,15 +173,179 @@ void printa_dados(Problem p) {
     return;
 }
 
-void escreveSolucao(Solution S, FILE * fl){
+void writeSolution(Solution S, FILE * fl){
 fprintf(fl, "<task_id>\t <FX/VM id>\t <Custo_fin>\t <Tempo_workflow>\t <Custo_normalizado>\n");
     for(int i = 0; i < S.vet_tripla.size(); i++){
         if(S.vet_tripla[i].type == 0){
-            fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  VM\n", S.vet_tripla[i].task_id, S.vet_tripla[i].vm_id, S.vet_tripla[i].vm_cost_total, S.vet_tripla[i].vm_time_total, S.vet_tripla[i].final_cost);
+            fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  VM\n", S.vet_tripla[i].task_id, S.vet_tripla[i].vm_id, S.vet_tripla[i].vm_cost_total, S.vet_tripla[i].vm_time_total, S.vet_tripla[i].cost);
         }
         else{
-            fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  FX\n", S.vet_tripla[i].task_id, S.vet_tripla[i].config_id, S.vet_tripla[i].task_p_config_cost, S.vet_tripla[i].task_time_total, S.vet_tripla[i].final_cost);
+            fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  FX\n", S.vet_tripla[i].task_id, S.vet_tripla[i].config_id, S.vet_tripla[i].task_p_config_cost, S.vet_tripla[i].task_time_total, S.vet_tripla[i].cost);
         }
     }
     return;
+}
+
+void setupOutputFiles(const char* caminho_base, char* caminho_geral, char* caminho_final) {
+    // Construir caminho para res_geral.txt
+    strcpy(caminho_geral, caminho_base);
+    strcat(caminho_geral, "/res_geral.txt");
+
+    // Construir caminho para res_final.txt
+    strcpy(caminho_final, caminho_base);
+    strcat(caminho_final, "/res_final.txt");
+
+    // Criar/limpar arquivo res_final.txt
+    FILE* fs = fopen(caminho_final, "w");
+    if (!fs) {
+        cerr << "Erro ao criar arquivo: " << caminho_final << endl;
+        exit(1);
+    }
+    fprintf(fs, "<Instância> \t <Custo_Financeiro_Melhor> \t <Tempo_Melhor> \t <Custo_Normalizado_Melhor> \t <Custo_Normalizado_Médio> \t <Tempo_CPU_Médio>\n \n");
+    fclose(fs);
+
+    // Criar/limpar arquivo res_geral.txt
+    FILE* fl = fopen(caminho_geral, "w");
+    if (!fl) {
+        cerr << "Erro ao criar arquivo: " << caminho_geral << endl;
+        exit(1);
+    }
+    fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\t <Custo_Financeiro> \t <Tempo_Workflow>\n");
+    fclose(fl);
+
+    return;
+}
+
+Solution Multistart(Problem p, float alpha, float phi, int repeticoes, int seed, double& tempo_exec) {
+    double inicio_cpu, inicio_sistema, fim_cpu, fim_sistema;
+    Solution melhor_sol;
+    float melhor_custo = __FLT_MAX__;
+
+    getCPUTime(&inicio_cpu, &inicio_sistema);
+
+    for (int i = 0; i < repeticoes; i++) {
+        Solution sol = constructiveHeuristic(alpha, phi, &seed, p);
+        if (sol.cost < melhor_custo) {
+            melhor_custo = sol.cost;
+            melhor_sol = sol;
+        }
+    }
+
+    getCPUTime(&fim_cpu, &fim_sistema);
+    
+    tempo_exec = fim_cpu - inicio_cpu;
+    
+    return melhor_sol;
+}
+
+void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_instancia, double custo_medio, double tempo_medio) {
+    Solution S_atual = solucao;
+    Solution S_melhor = solucao;
+
+    // Aplicar Swap_Machine
+    do {
+        S_atual = Swap_Machine(S_atual, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+        } else {
+            break;
+        }
+    } while (true);
+    fprintf(fs, "----------------------------SWAP MACHINE----------------------------------------------\n");
+    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
+
+    // Aplicar Swap_Config
+    do {
+        S_atual = Swap_Config(S_atual, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+        } else {
+            break;
+        }
+    } while (true);
+    fprintf(fs, "----------------------------SWAP CONFIG----------------------------------------------\n");
+    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
+
+    // Aplicar Swap_MachineToConfig
+    do {
+        S_atual = Swap_MachineToConfig(S_atual, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+        } else {
+            break;
+        }
+    } while (true);
+    fprintf(fs, "----------------------------SWAP MACHINE TO CONFIG----------------------------------------------\n");
+    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
+
+    // Aplicar Swap_ConfigToMachine
+    do {
+        S_atual = Swap_ConfigToMachine(S_atual, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+        } else {
+            break;
+        }
+    } while (true);
+    fprintf(fs, "----------------------------SWAP CONFIG TO MACHINE----------------------------------------------\n");
+    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
+
+    solucao = S_melhor;
+}
+
+void processInstance(const char* nome_instancia, const char* caminho_geral, const char* caminho_final, float alpha, float phi, int repeticoes) {
+    char caminho_completo[200];
+    strcpy(caminho_completo, "Instancias/");
+    strcat(caminho_completo, nome_instancia);
+
+    Problem p = readData(caminho_completo);
+    p.max_fin_cost = calculateMaxFinancialCost(p);
+    p.max_runtime = calculateMaxRuntime(p);
+    printProblem(p);
+
+    double custo_medio = 0.0;
+    double tempo_medio = 0.0;
+    Solution melhor_solucao;
+    double melhor_custo = __FLT_MAX__;
+    double custo_financeiro_melhor = 0.0;
+    double tempo_melhor = 0.0;
+
+    // Loop principal de sementes (originalmente 1 iteração)
+    for (int i = 0; i < 1; i++) {
+        int seed = i + 1;
+        double tempo_exec;
+        Solution sol = Multistart(p, alpha, phi, repeticoes, seed, tempo_exec);
+        
+        custo_medio += sol.cost;
+        tempo_medio += tempo_exec;
+
+        if (sol.cost < melhor_custo) {
+            melhor_custo = sol.cost;
+            custo_financeiro_melhor = sol.financial_cost;
+            tempo_melhor = sol.time;
+            melhor_solucao = sol;
+        }
+
+        // Escrever resultados gerais
+        FILE* fl = fopen(caminho_geral, "a");
+        fprintf(fl, "%s\t %d\t %.15f\t %f\t %f\t %f\n", 
+                nome_instancia, seed, sol.cost, tempo_exec, sol.financial_cost, sol.time);
+        writeSolution(sol, fl);
+        fprintf(fl, "========================================================================\n");
+        fclose(fl);
+    }
+
+    custo_medio /= 1.0;
+    tempo_medio /= 1.0;
+
+    // Escrever resultados finais
+    FILE* fs = fopen(caminho_final, "a");
+    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", 
+            nome_instancia, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_medio, tempo_medio);
+    
+    // Aplicar busca local
+    VND(melhor_solucao, p, phi, fs, nome_instancia, custo_medio, tempo_medio);
+    
+    fprintf(fs, "====================================================================\n\n\n");
+    fclose(fs);
 }
