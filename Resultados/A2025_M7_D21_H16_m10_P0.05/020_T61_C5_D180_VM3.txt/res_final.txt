@@ -1,0 +1,8 @@
+<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
+ 
+020_T61_C5_D180_VM3.txt	 0.001885	 486.814803	 0.194455	 0.194455	 0.387764
+----------------------------SWAP CONFIG MACHINE PAIR----------------------------------------------
+020_T61_C5_D180_VM3.txt	 0.001820	 488.696991	 0.189131	 0.194455	 0.387764
+====================================================================
+
+

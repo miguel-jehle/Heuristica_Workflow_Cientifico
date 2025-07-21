@@ -1,0 +1,8 @@
+<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
+ 
+035_T106_C5_D300_VM3.txt	 0.005389	 1246.407056	 0.197343	 0.197343	 2.427901
+----------------------------SWAP CONFIG MACHINE PAIR----------------------------------------------
+035_T106_C5_D300_VM3.txt	 0.004759	 1446.800638	 0.183822	 0.197343	 2.427901
+====================================================================
+
+

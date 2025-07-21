@@ -254,7 +254,7 @@ void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_ins
     //         break;
     //     }
     // } while (true);
-    // fprintf(fs, "----------------------------SWAP MACHINE----------------------------------------------\n");
+    // fprintf(fs, "----------------------------SWAP MACHINE-------------------------------------------------------\n");
     // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
 
     // // Aplicar Swap_Config
@@ -266,7 +266,7 @@ void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_ins
     //         break;
     //     }
     // } while (true);
-    // fprintf(fs, "----------------------------SWAP CONFIG----------------------------------------------\n");
+    // fprintf(fs, "----------------------------SWAP CONFIG---------------------------------------------------------\n");
     // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
 
     // // Aplicar Swap_MachineToConfig
@@ -306,27 +306,27 @@ void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_ins
     // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
 
     // Aplicar Swap_ConfigPair
-    do {
-        S_atual = Swap_ConfigPair(S_atual, p, phi);
-        if (S_atual.cost < S_melhor.cost) {
-            S_melhor = S_atual;
-        } else {
-            break;
-        }
-    } while (true);
-    fprintf(fs, "----------------------------SWAP CONFIG PAIR---------------------------------------------------\n");
-    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
+    // do {
+    //     S_atual = Swap_ConfigPair(S_atual, p, phi);
+    //     if (S_atual.cost < S_melhor.cost) {
+    //         S_melhor = S_atual;
+    //     } else {
+    //         break;
+    //     }
+    // } while (true);
+    // fprintf(fs, "----------------------------SWAP CONFIG PAIR---------------------------------------------------\n");
+    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
 
-    do {
-        S_atual = SwapMachineConfig_Pair(S_atual, p, phi);
-        if (S_atual.cost < S_melhor.cost) {
-            S_melhor = S_atual;
-        } else {
-            break;
-        }
-    } while (true);
-    fprintf(fs, "----------------------------SWAP MACHINE CONFIG PAIR----------------------------------------------\n");
-    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
+    // do {
+    //     S_atual = SwapMachineConfig_Pair(S_atual, p, phi);
+    //     if (S_atual.cost < S_melhor.cost) {
+    //         S_melhor = S_atual;
+    //     } else {
+    //         break;
+    //     }
+    // } while (true);
+    // fprintf(fs, "----------------------------SWAP MACHINE CONFIG PAIR----------------------------------------------\n");
+    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
 
     do {
         S_atual = SwapConfigMachine_Pair(S_atual, p, phi);
@@ -350,7 +350,7 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
     Problem p = readData(caminho_completo);
     p.max_fin_cost = calculateMaxFinancialCost(p);
     p.max_runtime = calculateMaxRuntime(p);
-    printProblem(p);
+    //printProblem(p);
 
     double custo_medio = 0.0;
     double tempo_medio = 0.0;
@@ -400,7 +400,7 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
 }
 
 int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancias) {
-    FILE* fsum = fopen("Instancias/teste.txt", "r");
+    FILE* fsum = fopen("Instancias/sumario.txt", "r");
     if (!fsum) return 0;
     char nome_inst[128];
     int count = 0;
@@ -417,6 +417,11 @@ int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancia
     snprintf(pasta_base, sizeof(pasta_base), "Resultados/A%d_M%d_D%d_H%d_m%d_P%.2f",t->tm_year+1900, t->tm_mon+1, t->tm_mday, t->tm_hour, t->tm_min, phi);
     mkdir("Resultados", 0777);
     mkdir(pasta_base, 0777);
+    // Cria arquivo de contexto vazio
+    char caminho_contexto[300];
+    snprintf(caminho_contexto, sizeof(caminho_contexto), "%s/contexto_execucao.txt", pasta_base);
+    FILE* fcontext = fopen(caminho_contexto, "w");
+    if (fcontext) fclose(fcontext);
     for (int i = 0; i < count; i++) {
         char pasta_inst[256];
         snprintf(pasta_inst, sizeof(pasta_inst), "%s/%s", pasta_base, caminhos_instancias[i]);

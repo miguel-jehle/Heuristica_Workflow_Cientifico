@@ -1,0 +1,8 @@
+<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
+ 
+002_T7_C5_D18_VM3.txt	 0.000020	 5.641991	 0.153574	 0.153574	 0.001023
+----------------------------SWAP CONFIG MACHINE PAIR----------------------------------------------
+002_T7_C5_D18_VM3.txt	 0.000020	 5.641991	 0.153574	 0.153574	 0.001023
+====================================================================
+
+

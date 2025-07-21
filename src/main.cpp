@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
     float alpha = atof(argv[2]);
     int repeticoes = atoi(argv[3]);
     char instance_names[MAX_INST][128];
-    int num_instances = readInstanceNames("Instancias/teste.txt", instance_names, MAX_INST);
+    int num_instances = readInstanceNames("Instancias/sumario.txt", instance_names, MAX_INST);
     if (num_instances < 0) {
         printf("Erro ao abrir sumario.txt\n");
         return 1;

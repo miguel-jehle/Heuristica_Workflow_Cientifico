@@ -68,7 +68,6 @@ Solution Swap_Config(Solution S, Problem p, float phi){
                         S_atual.cost = calculateTotalCost(S_atual);
                         S_atual.financial_cost = calculateFinancialCost(S_atual);
                         S_atual.time = calculateTotalTime(S_atual);
-                        printf("%f          %f\n\n", S_atual.financial_cost, S_atual.time);
                         return S_atual;
                         }
 
