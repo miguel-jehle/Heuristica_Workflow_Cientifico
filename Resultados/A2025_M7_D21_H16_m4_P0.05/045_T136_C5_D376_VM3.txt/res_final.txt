@@ -1,8 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-045_T136_C5_D376_VM3.txt	 0.008102	 2019.741588	 0.190795	 0.190795	 5.529957
-----------------------------SWAP MACHINE CONFIG PAIR----------------------------------------------
-045_T136_C5_D376_VM3.txt	 0.007571	 2110.406635	 0.181971	 0.190795	 5.529957
-====================================================================
-
-

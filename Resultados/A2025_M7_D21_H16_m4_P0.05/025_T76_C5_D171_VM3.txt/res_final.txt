@@ -1,8 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-025_T76_C5_D171_VM3.txt	 0.001829	 428.593151	 0.193937	 0.193937	 0.577099
-----------------------------SWAP MACHINE CONFIG PAIR----------------------------------------------
-025_T76_C5_D171_VM3.txt	 0.001599	 537.234539	 0.182861	 0.193937	 0.577099
-====================================================================
-
-

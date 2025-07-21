@@ -1,1 +1,0 @@
-<Instância> 	 <Semente> 	 <Melhor_Custo> 	 <Tempo_CPU>	 <Custo_Financeiro> 	 <Tempo_Workflow>

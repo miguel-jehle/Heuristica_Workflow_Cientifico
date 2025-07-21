@@ -1,3 +1,0 @@
-- Rodando todas as instâncias pela primeira vez com as 8 vizinhanças
-- Foi liso até o 60 mas no 70 deu "killed" por algum motivo que desconheço
-- Rodou por bastante tempo até de fato parar

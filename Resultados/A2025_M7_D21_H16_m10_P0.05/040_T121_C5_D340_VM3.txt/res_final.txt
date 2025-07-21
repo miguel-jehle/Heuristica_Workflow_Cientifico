@@ -1,8 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-040_T121_C5_D340_VM3.txt	 0.006610	 1684.090264	 0.191468	 0.191468	 3.716382
-----------------------------SWAP CONFIG MACHINE PAIR----------------------------------------------
-040_T121_C5_D340_VM3.txt	 0.006199	 1849.561851	 0.185450	 0.191468	 3.716382
-====================================================================
-
-
