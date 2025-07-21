@@ -5,35 +5,33 @@
 #include <cstring>
 #include <iostream>
 
+#define MAX_INST 100
+
 using namespace std;
 
 int main(int argc, char** argv) {
-    if (argc < 5) {
-        cerr << "Uso: " << argv[0] << " caminho_resp phi alpha repeticoes\n";
+    if (argc < 4) {
+        printf("Uso: %s phi alpha repeticoes\n", argv[0]);
         return 1;
     }
-
-    char caminho_geral[200], caminho_final[200];
-    setupOutputFiles(argv[1], caminho_geral, caminho_final);
-
-    FILE* fp = fopen("Instancias/teste.txt", "r");
-    if (!fp) {
-        cerr << "Erro ao abrir arquivo de instâncias\n";
+    float phi = atof(argv[1]);
+    float alpha = atof(argv[2]);
+    int repeticoes = atoi(argv[3]);
+    char instance_names[MAX_INST][128];
+    int num_instances = readInstanceNames("Instancias/sumario.txt", instance_names, MAX_INST);
+    if (num_instances < 0) {
+        printf("Erro ao abrir sumario.txt\n");
         return 1;
     }
-
-    char nome_arquivo[200];
-    while (fscanf(fp, "%s", nome_arquivo) == 1) {
-        processInstance(
-            nome_arquivo,
-            caminho_geral, 
-            caminho_final, 
-            atof(argv[3]),
-            atof(argv[2]),
-            atoi(argv[4])
-        );
+    char instance_paths[MAX_INST][256];
+    if (!setupRunFolders(phi, instance_paths, &num_instances)) {
+        printf("Erro ao preparar pastas de execução\n");
+        return 1;
     }
-
-    fclose(fp);
+    for (int i = 0; i < num_instances; i++) {
+        char general_path[300], final_path[300];
+        setupOutputFiles(instance_paths[i], general_path, final_path);
+        processInstance(instance_names[i], general_path, final_path, alpha, phi, repeticoes);
+    }
     return 0;
 }

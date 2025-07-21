@@ -5,6 +5,9 @@
 #include <sys/resource.h>
 #include <cstring>
 #include <iostream>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <time.h>
 
 using namespace std;
 
@@ -348,4 +351,42 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
     
     fprintf(fs, "====================================================================\n\n\n");
     fclose(fs);
+}
+
+int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancias) {
+    FILE* fsum = fopen("Instancias/sumario.txt", "r");
+    if (!fsum) return 0;
+    char nome_inst[128];
+    int count = 0;
+    while (fscanf(fsum, "%127s", nome_inst) == 1) {
+        strcpy(caminhos_instancias[count], nome_inst);
+        count++;
+    }
+    fclose(fsum);
+    *n_instancias = count;
+    // Data/hora
+    time_t now = time(NULL);
+    struct tm* t = localtime(&now);
+    char pasta_base[256];
+    snprintf(pasta_base, sizeof(pasta_base), "Resultados/P%.2f_A%d_M%d_D%d_H%d_m%d", phi, t->tm_year+1900, t->tm_mon+1, t->tm_mday, t->tm_hour, t->tm_min);
+    mkdir("Resultados", 0777);
+    mkdir(pasta_base, 0777);
+    for (int i = 0; i < count; i++) {
+        char pasta_inst[256];
+        snprintf(pasta_inst, sizeof(pasta_inst), "%s/%s", pasta_base, caminhos_instancias[i]);
+        mkdir(pasta_inst, 0777);
+        strcpy(caminhos_instancias[i], pasta_inst);
+    }
+    return 1;
+}
+
+int readInstanceNames(const char* filename, char instance_names[][128], int max_instances) {
+    FILE* f = fopen(filename, "r");
+    if (!f) return -1;
+    int count = 0;
+    while (count < max_instances && fscanf(f, "%127s", instance_names[count]) == 1) {
+        count++;
+    }
+    fclose(f);
+    return count;
 }
