@@ -27,6 +27,7 @@ Solution constructiveHeuristic(float alpha, float phi ,int* seed,Problem p){
         for(int i = 0; i < TarefasViaveis.size(); i++){
             for(int j = 0; j < TarefasViaveis[i].vet_config.size(); j++){
                 aux.task_id = TarefasViaveis[i].task_id;
+                aux.task_index = TarefasViaveis[i].task_index;
                 aux.config_id = TarefasViaveis[i].vet_config[j].config_id;
                 aux.task_p_config_cost = TarefasViaveis[i].vet_config[j].task_p_config_cost;
                 aux.task_time_total = TarefasViaveis[i].vet_config[j].task_time_total;
@@ -40,6 +41,7 @@ Solution constructiveHeuristic(float alpha, float phi ,int* seed,Problem p){
         for(int i = 0; i < TarefasViaveis.size(); i++){
             for(int j = 0; j < p.vet_machine.size(); j++){
                 aux.task_id = TarefasViaveis[i].task_id;
+                aux.task_index = TarefasViaveis[i].task_index;
                 aux.vm_id = p.vet_machine[j].id;
                 aux.vm_slowdown = p.vet_machine[j].slowdown;
                 aux.vm_time_total = calculateVMTime(p,TarefasViaveis[i],p.vet_machine[j]); 
@@ -126,7 +128,9 @@ vector<Tasks> updateFeasibleTasks(vector<Tasks> TarefasViaveis, vector<Tasks> ve
             }
         }
         if (todosDisponiveis) {
-            TarefasViaveis.push_back(vet_tasks[i]);
+            Tasks t = vet_tasks[i];
+            t.task_index = i;
+            TarefasViaveis.push_back(t);
         }
     }
     return TarefasViaveis;

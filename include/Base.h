@@ -24,6 +24,7 @@ struct Task_config{
 
 struct Tasks{
     int task_id = -1;
+    int task_index = -1; // índice da task no vetor de tasks
     int type = -1; //0 - VM or 1 - FX
     int activity_id;
     int n_input;
@@ -77,6 +78,7 @@ struct Problem{
 struct Tripla{
     //Infos gerais
     int task_id;
+    int task_index; // índice da task no vetor de tasks
     double cost = 0; //Campo que faz a normalização do custo total da tarefa com relação ao custo total das tarefas e o tempo.
     int type; //0 - VM or 1 - FX
 
