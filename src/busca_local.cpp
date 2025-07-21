@@ -160,3 +160,47 @@ Solution Swap_ConfigToMachine(Solution S, Problem p, float phi) {
     }
     return S;
 }
+
+Solution SwapMachine_Pair(Solution S, Problem p, float phi) {
+    Solution S_atual = S;
+    int n = S_atual.vet_tripla.size();
+    for (int i = 0; i < n; i++) {
+        if (S_atual.vet_tripla[i].type != 0) continue;
+        for (int j = i + 1; j < n; j++) {
+            if (S_atual.vet_tripla[j].type != 0) continue;
+            // Só troca se as VMs forem diferentes
+            if (S_atual.vet_tripla[i].vm_id == S_atual.vet_tripla[j].vm_id) continue;
+            Solution S_vizinho = S_atual;
+            // Troca as VMs das duas tasks
+            int vm_i = S_vizinho.vet_tripla[i].vm_id;
+            int vm_j = S_vizinho.vet_tripla[j].vm_id;
+            double slowdown_i = S_vizinho.vet_tripla[i].vm_slowdown;
+            double slowdown_j = S_vizinho.vet_tripla[j].vm_slowdown;
+            S_vizinho.vet_tripla[i].vm_id = vm_j;
+            S_vizinho.vet_tripla[i].vm_slowdown = slowdown_j;
+            S_vizinho.vet_tripla[j].vm_id = vm_i;
+            S_vizinho.vet_tripla[j].vm_slowdown = slowdown_i;
+            // Recalcula tempos e custos das duas tasks
+            int idx_task_i = -1, idx_task_j = -1;
+            for (int k = 0; k < p.vet_tasks.size(); k++) {
+                if (p.vet_tasks[k].task_id == S_vizinho.vet_tripla[i].task_id) idx_task_i = k;
+                if (p.vet_tasks[k].task_id == S_vizinho.vet_tripla[j].task_id) idx_task_j = k;
+            }
+            if (idx_task_i == -1 || idx_task_j == -1) continue;
+            S_vizinho.vet_tripla[i].vm_time_total = calculateVMTime(p, p.vet_tasks[idx_task_i], p.vet_machine[S_vizinho.vet_tripla[i].vm_id]);
+            S_vizinho.vet_tripla[i].vm_cost_total = p.vet_machine[S_vizinho.vet_tripla[i].vm_id].cost * p.vet_machine[S_vizinho.vet_tripla[i].vm_id].slowdown * S_vizinho.vet_tripla[i].vm_time_total;
+            S_vizinho.vet_tripla[i].cost = normalizeCandidateCost(S_vizinho.vet_tripla[i], phi, p.max_fin_cost, p.max_runtime);
+            S_vizinho.vet_tripla[j].vm_time_total = calculateVMTime(p, p.vet_tasks[idx_task_j], p.vet_machine[S_vizinho.vet_tripla[j].vm_id]);
+            S_vizinho.vet_tripla[j].vm_cost_total = p.vet_machine[S_vizinho.vet_tripla[j].vm_id].cost * p.vet_machine[S_vizinho.vet_tripla[j].vm_id].slowdown * S_vizinho.vet_tripla[j].vm_time_total;
+            S_vizinho.vet_tripla[j].cost = normalizeCandidateCost(S_vizinho.vet_tripla[j], phi, p.max_fin_cost, p.max_runtime);
+            // Atualiza custos totais
+            S_vizinho.cost = calculateTotalCost(S_vizinho);
+            S_vizinho.financial_cost = calculateFinancialCost(S_vizinho);
+            S_vizinho.time = calculateTotalTime(S_vizinho);
+            if (S_vizinho.cost < S_atual.cost) {
+                return S_vizinho;
+            }
+        }
+    }
+    return S;
+}

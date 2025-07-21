@@ -368,7 +368,7 @@ int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancia
     time_t now = time(NULL);
     struct tm* t = localtime(&now);
     char pasta_base[256];
-    snprintf(pasta_base, sizeof(pasta_base), "Resultados/P%.2f_A%d_M%d_D%d_H%d_m%d", phi, t->tm_year+1900, t->tm_mon+1, t->tm_mday, t->tm_hour, t->tm_min);
+    snprintf(pasta_base, sizeof(pasta_base), "Resultados/A%d_M%d_D%d_H%d_m%d_P%.2f", phi, t->tm_year+1900, t->tm_mon+1, t->tm_mday, t->tm_hour, t->tm_min);
     mkdir("Resultados", 0777);
     mkdir(pasta_base, 0777);
     for (int i = 0; i < count; i++) {
