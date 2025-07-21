@@ -254,3 +254,137 @@ Solution Swap_ConfigPair(Solution S, Problem p, float phi) {
     }
     return S;
 }
+
+// ===================== SWAP MACHINE CONFIG PAIR ===================== //
+// Tenta trocar o tipo de execução entre uma task VM e uma task FX (função/configuração)
+// Para cada par (VM, FX), troca VM pela config da FX e FX pela VM da VM
+// Recalcula custos e tempos das duas tasks trocadas
+// Retorna a primeira solução melhor encontrada
+Solution SwapMachineConfig_Pair(Solution S, Problem p, float phi) {
+    Solution S_atual = S;
+    int n = S_atual.vet_tripla.size();
+    for (int i = 0; i < n; i++) {
+        // Só considera tasks rodando em VM
+        if (S_atual.vet_tripla[i].type != 0) continue;
+        for (int j = 0; j < n; j++) {
+            // Só considera tasks rodando em Config
+            if (S_atual.vet_tripla[j].type != 1) continue;
+            // Troca VM da i pela Config do j e vice-versa
+            Solution S_vizinho = S_atual;
+            // Salva ids originais
+            int vm_i = S_vizinho.vet_tripla[i].vm_id;
+            double slowdown_i = S_vizinho.vet_tripla[i].vm_slowdown;
+            int config_j = S_vizinho.vet_tripla[j].config_id;
+            // Atualiza tipos e ids
+            S_vizinho.vet_tripla[i].type = 1;
+            S_vizinho.vet_tripla[i].config_id = config_j;
+            S_vizinho.vet_tripla[j].type = 0;
+            S_vizinho.vet_tripla[j].vm_id = vm_i;
+            S_vizinho.vet_tripla[j].vm_slowdown = slowdown_i;
+            // -------- Recalcula custos e tempos para i (agora FX) -------- //
+            int idx_task_i = -1;
+            for (int k = 0; k < p.vet_tasks.size(); k++) {
+                if (p.vet_tasks[k].task_id == S_vizinho.vet_tripla[i].task_id) idx_task_i = k;
+            }
+            int conf_idx_i = -1;
+            if (idx_task_i != -1) {
+                for (int c = 0; c < p.vet_tasks[idx_task_i].vet_config.size(); c++) {
+                    if (p.vet_tasks[idx_task_i].vet_config[c].config_id == config_j) {
+                        conf_idx_i = c;
+                        break;
+                    }
+                }
+            }
+            if (conf_idx_i == -1) continue;
+            // Atualiza tempo e custo da configuração
+            S_vizinho.vet_tripla[i].task_time_total = p.vet_tasks[idx_task_i].vet_config[conf_idx_i].task_time_total;
+            S_vizinho.vet_tripla[i].task_p_config_cost = p.vet_tasks[idx_task_i].vet_config[conf_idx_i].task_p_config_cost;
+            S_vizinho.vet_tripla[i].cost = normalizeCandidateCost(S_vizinho.vet_tripla[i], phi, p.max_fin_cost, p.max_runtime);
+            // -------- Recalcula custos e tempos para j (agora VM) -------- //
+            int idx_task_j = -1;
+            for (int k = 0; k < p.vet_tasks.size(); k++) {
+                if (p.vet_tasks[k].task_id == S_vizinho.vet_tripla[j].task_id) idx_task_j = k;
+            }
+            if (idx_task_j == -1) continue;
+            // Atualiza tempo e custo da VM
+            S_vizinho.vet_tripla[j].vm_time_total = calculateVMTime(p, p.vet_tasks[idx_task_j], p.vet_machine[vm_i]);
+            S_vizinho.vet_tripla[j].vm_cost_total = p.vet_machine[vm_i].cost * p.vet_machine[vm_i].slowdown * S_vizinho.vet_tripla[j].vm_time_total;
+            S_vizinho.vet_tripla[j].cost = normalizeCandidateCost(S_vizinho.vet_tripla[j], phi, p.max_fin_cost, p.max_runtime);
+            // -------- Atualiza custos totais da solução -------- //
+            S_vizinho.cost = calculateTotalCost(S_vizinho);
+            S_vizinho.financial_cost = calculateFinancialCost(S_vizinho);
+            S_vizinho.time = calculateTotalTime(S_vizinho);
+            // Se encontrou solução melhor, retorna
+            if (S_vizinho.cost < S_atual.cost) {
+                return S_vizinho;
+            }
+        }
+    }
+    return S;
+}
+
+// ===================== SWAP CONFIG MACHINE PAIR ===================== //
+// Tenta trocar o tipo de execução entre uma task FX (função/configuração) e uma task VM
+// Para cada par (FX, VM), troca Config da FX pela VM do VM e vice-versa
+// Recalcula custos e tempos das duas tasks trocadas
+// Retorna a primeira solução melhor encontrada
+Solution SwapConfigMachine_Pair(Solution S, Problem p, float phi) {
+    Solution S_atual = S;
+    int n = S_atual.vet_tripla.size();
+    for (int i = 0; i < n; i++) {
+        // Só considera tasks rodando em Config
+        if (S_atual.vet_tripla[i].type != 1) continue;
+        for (int j = 0; j < n; j++) {
+            // Só considera tasks rodando em VM
+            if (S_atual.vet_tripla[j].type != 0) continue;
+            // Troca Config da i pela VM do j e vice-versa
+            Solution S_vizinho = S_atual;
+            // Salva ids originais
+            int config_i = S_vizinho.vet_tripla[i].config_id;
+            int vm_j = S_vizinho.vet_tripla[j].vm_id;
+            double slowdown_j = S_vizinho.vet_tripla[j].vm_slowdown;
+            // Atualiza tipos e ids
+            S_vizinho.vet_tripla[i].type = 0;
+            S_vizinho.vet_tripla[i].vm_id = vm_j;
+            S_vizinho.vet_tripla[i].vm_slowdown = slowdown_j;
+            S_vizinho.vet_tripla[j].type = 1;
+            S_vizinho.vet_tripla[j].config_id = config_i;
+            // -------- Recalcula custos e tempos para i (agora VM) -------- //
+            int idx_task_i = -1;
+            for (int k = 0; k < p.vet_tasks.size(); k++) {
+                if (p.vet_tasks[k].task_id == S_vizinho.vet_tripla[i].task_id) idx_task_i = k;
+            }
+            if (idx_task_i == -1) continue;
+            S_vizinho.vet_tripla[i].vm_time_total = calculateVMTime(p, p.vet_tasks[idx_task_i], p.vet_machine[vm_j]);
+            S_vizinho.vet_tripla[i].vm_cost_total = p.vet_machine[vm_j].cost * p.vet_machine[vm_j].slowdown * S_vizinho.vet_tripla[i].vm_time_total;
+            S_vizinho.vet_tripla[i].cost = normalizeCandidateCost(S_vizinho.vet_tripla[i], phi, p.max_fin_cost, p.max_runtime);
+            // -------- Recalcula custos e tempos para j (agora FX) -------- //
+            int idx_task_j = -1;
+            for (int k = 0; k < p.vet_tasks.size(); k++) {
+                if (p.vet_tasks[k].task_id == S_vizinho.vet_tripla[j].task_id) idx_task_j = k;
+            }
+            int conf_idx_j = -1;
+            if (idx_task_j != -1) {
+                for (int c = 0; c < p.vet_tasks[idx_task_j].vet_config.size(); c++) {
+                    if (p.vet_tasks[idx_task_j].vet_config[c].config_id == config_i) {
+                        conf_idx_j = c;
+                        break;
+                    }
+                }
+            }
+            if (conf_idx_j == -1) continue;
+            S_vizinho.vet_tripla[j].task_time_total = p.vet_tasks[idx_task_j].vet_config[conf_idx_j].task_time_total;
+            S_vizinho.vet_tripla[j].task_p_config_cost = p.vet_tasks[idx_task_j].vet_config[conf_idx_j].task_p_config_cost;
+            S_vizinho.vet_tripla[j].cost = normalizeCandidateCost(S_vizinho.vet_tripla[j], phi, p.max_fin_cost, p.max_runtime);
+            // -------- Atualiza custos totais da solução -------- //
+            S_vizinho.cost = calculateTotalCost(S_vizinho);
+            S_vizinho.financial_cost = calculateFinancialCost(S_vizinho);
+            S_vizinho.time = calculateTotalTime(S_vizinho);
+            // Se encontrou solução melhor, retorna
+            if (S_vizinho.cost < S_atual.cost) {
+                return S_vizinho;
+            }
+        }
+    }
+    return S;
+}
