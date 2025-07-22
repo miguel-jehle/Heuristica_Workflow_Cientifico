@@ -1,8 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-010_T31_C5_D71_VM3.txt	 0.000323	 78.077504	 0.188000	 0.188000	 0.049341
-----------------------------SWAP CONFIG TO MACHINE----------------------------------------------
-010_T31_C5_D71_VM3.txt	 0.000280	 59.749080	 0.159235	 0.188000	 0.049341
-====================================================================
-
-

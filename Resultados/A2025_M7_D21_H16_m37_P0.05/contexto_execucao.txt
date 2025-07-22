@@ -1,1 +1,0 @@
-- Comprovando que o Swap_ConfigPair de fato reduz os valores.

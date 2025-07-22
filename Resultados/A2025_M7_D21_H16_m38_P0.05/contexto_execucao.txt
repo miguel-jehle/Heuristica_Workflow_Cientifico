@@ -1,1 +1,0 @@
-- Comprovando que o Swap_MachineToConfigPair de fato reduz os valores.
