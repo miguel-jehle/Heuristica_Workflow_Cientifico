@@ -1,0 +1,6 @@
+<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
+ 
+040_T121_C5_D284_VM3.txt	 0.015031	 863.282456	 0.533198	 0.533198	 2.933874
+====================================================================
+
+

@@ -1,0 +1,6 @@
+<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
+ 
+010_T31_C5_D97_VM3.txt	 0.000559	 160.849303	 0.200575	 0.200575	 0.046362
+====================================================================
+
+
