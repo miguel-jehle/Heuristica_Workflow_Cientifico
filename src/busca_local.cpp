@@ -1,6 +1,7 @@
 #include "busca_local.h"
 #include "construtivo.h"  // Para funções de cálculo
 #include "Base.h"
+#include <cstddef>
 
 Solution Swap_Machine(Solution S, Problem p, float phi){
     Solution S_atual = S;

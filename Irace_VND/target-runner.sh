@@ -29,4 +29,6 @@ if [ "$BEST" == "-999999999" ]; then
     exit 1
 fi
 
-echo "$BEST"
+# Retorna o valor negativo para maximizar no irace
+NEGATIVE_BEST=$(LC_NUMERIC=C awk "BEGIN {print -1 * $BEST}")
+echo "$NEGATIVE_BEST"

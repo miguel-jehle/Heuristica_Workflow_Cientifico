@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#include <stdio.h>
 
 using namespace std;
 
@@ -415,8 +416,8 @@ int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancia
     FILE* fcontext = fopen(caminho_contexto, "w");
     if (fcontext) fclose(fcontext);
     for (int i = 0; i < count; i++) {
-        char pasta_inst[256];
-        snprintf(pasta_inst, sizeof(pasta_inst), "%s/%s", pasta_base, caminhos_instancias[i]);
+        char pasta_inst[512];
+        int n = snprintf(pasta_inst, sizeof(pasta_inst), "%s/%s", pasta_base, caminhos_instancias[i]);
         mkdir(pasta_inst, 0777);
         strcpy(caminhos_instancias[i], pasta_inst);
     }

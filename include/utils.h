@@ -1,4 +1,5 @@
 #pragma once
+#include <stdio.h>
 #include "Base.h"
 
 void getCPUTime(double *seg_CPU_total, double *seg_sistema_total);
