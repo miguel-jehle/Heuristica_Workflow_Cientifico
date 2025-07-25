@@ -244,103 +244,85 @@ Solution Multistart(Problem p, float alpha, float phi, int repeticoes, int seed,
 void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_instancia, double custo_medio, double tempo_medio) {
     Solution S_atual = solucao;
     Solution S_melhor = solucao;
+    bool melhoria = true;
 
-    // // Aplicar Swap_Machine
-    // do {
-    //     S_atual = Swap_Machine(S_atual, p, phi);
-    //     if (S_atual.cost < S_melhor.cost) {
-    //         S_melhor = S_atual;
-    //     } else {
-    //         break;
-    //     }
-    // } while (true);
-    // fprintf(fs, "----------------------------SWAP MACHINE-------------------------------------------------------\n");
-    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
+    while (melhoria) {
+        melhoria = false;
 
-    // // Aplicar Swap_Config
-    // do {
-    //     S_atual = Swap_Config(S_atual, p, phi);
-    //     if (S_atual.cost < S_melhor.cost) {
-    //         S_melhor = S_atual;
-    //     } else {
-    //         break;
-    //     }
-    // } while (true);
-    // fprintf(fs, "----------------------------SWAP CONFIG---------------------------------------------------------\n");
-    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
-
-    // // Aplicar Swap_MachineToConfig
-    // do {
-    //     S_atual = Swap_MachineToConfig(S_atual, p, phi);
-    //     if (S_atual.cost < S_melhor.cost) {
-    //         S_melhor = S_atual;
-    //     } else {
-    //         break;
-    //     }
-    // } while (true);
-    // fprintf(fs, "----------------------------SWAP MACHINE TO CONFIG----------------------------------------------\n");
-    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
-
-    // // Aplicar Swap_ConfigToMachine
-    // do {
-    //     S_atual = Swap_ConfigToMachine(S_atual, p, phi);
-    //     if (S_atual.cost < S_melhor.cost) {
-    //         S_melhor = S_atual;
-    //     } else {
-    //         break;
-    //     }
-    // } while (true);
-    // fprintf(fs, "----------------------------SWAP CONFIG TO MACHINE----------------------------------------------\n");
-    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
-
-    // // Aplicar Swap_MachinePair
-    // do {
-    //     S_atual = Swap_MachinePair(S_atual, p, phi);
-    //     if (S_atual.cost < S_melhor.cost) {
-    //         S_melhor = S_atual;
-    //     } else {
-    //         break;
-    //     }
-    // } while (true);
-    // fprintf(fs, "----------------------------SWAP MACHINE PAIR---------------------------------------------------\n");
-    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
-
-    // //Aplicar Swap_ConfigPair
-    // do {
-    //     S_atual = Swap_ConfigPair(S_atual, p, phi);
-    //     if (S_atual.cost < S_melhor.cost) {
-    //         S_melhor = S_atual;
-    //     } else {
-    //         break;
-    //     }
-    // } while (true);
-    // fprintf(fs, "----------------------------SWAP CONFIG PAIR---------------------------------------------------\n");
-    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
-
-    // do {
-    //     S_atual = SwapMachineConfig_Pair(S_atual, p, phi);
-    //     if (S_atual.cost < S_melhor.cost) {
-    //         S_melhor = S_atual;
-    //     } else {
-    //         break;
-    //     }
-    // } while (true);
-    // fprintf(fs, "----------------------------SWAP MACHINE CONFIG PAIR----------------------------------------------\n");
-    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
-
-    do {
-        S_atual = SwapConfigMachine_Pair(S_atual, p, phi);
+        // 1. SwapConfig (2)
+        S_atual = Swap_Config(S_melhor, p, phi);
         if (S_atual.cost < S_melhor.cost) {
             S_melhor = S_atual;
-        } else {
-            break;
+            melhoria = true;
+            continue;
         }
-    } while (true);
-    fprintf(fs, "----------------------------SWAP CONFIG MACHINE PAIR----------------------------------------------\n");
-    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", nome_instancia, S_melhor.financial_cost, S_melhor.time, S_melhor.cost, custo_medio, tempo_medio);
 
+        // 2. SwapMachine (1)
+        S_atual = Swap_Machine(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 3. SwapConfigToMachine (4)
+        S_atual = Swap_ConfigToMachine(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 4. SwapConfigMachine_Pair (8)
+        S_atual = SwapConfigMachine_Pair(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 5. SwapMachineConfig_Pair (7)
+        S_atual = SwapMachineConfig_Pair(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 6. SwapConfig_Pair (6)
+        S_atual = Swap_ConfigPair(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 7. SwapMachine_Pair (5)
+        S_atual = Swap_MachinePair(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 8. Swap_MachineToConfig (3)
+        S_atual = Swap_MachineToConfig(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+    }
+
+    // Atualiza a solução de entrada com a melhor encontrada
     solucao = S_melhor;
+
+    // Registra no arquivo de saída
+    fprintf(fs, "----------------------------VND FINAL RESULT----------------------------------------------\n");
+    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", 
+            nome_instancia, solucao.financial_cost, solucao.time, solucao.cost, custo_medio, tempo_medio);
 }
+
 
 void processInstance(const char* nome_instancia, const char* caminho_geral, const char* caminho_final, float alpha, float phi, int repeticoes) {
     char caminho_completo[200];
