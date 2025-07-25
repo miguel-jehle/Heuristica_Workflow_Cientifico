@@ -299,7 +299,7 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
 }
 
 int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancias) {
-    FILE* fsum = fopen("Instancias/teste.txt", "r");
+    FILE* fsum = fopen("Instancias/sumario.txt", "r");
     if (!fsum) return 0;
     char nome_inst[128];
     int count = 0;
