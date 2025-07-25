@@ -1,0 +1,124 @@
+# 2025-07-24 13:19:24 -03: Initialization
+# Elitist race
+# Elitist new instances: 1
+# Elitist limit: 2
+# nbIterations: 2
+# minNbSurvival: 2
+# nbParameters: 1
+# seed: 1274946889
+# confidence level: 0.95
+# budget: 1000
+# mu: 5
+# deterministic: FALSE
+
+# 2025-07-24 13:19:24 -03: Iteration 1 of 2
+# experimentsUsed: 0
+# remainingBudget: 1000
+# currentBudget: 500
+# nbConfigurations: 83
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded.
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|          1|          6|          5|   -0.1151830000|          6|00:00:01|   NA|  NA|    NA|
+|x|          2|          6|          5|   -0.1195880000|         12|00:00:16|+1.00|1.00|0.0117|
+|x|          3|          6|          5|   -0.1057180000|         18|00:00:00|+0.96|0.97|0.0210|
+|x|          4|          6|          5|   -0.1041127500|         24|00:01:02|+0.97|0.98|0.0365|
+|-|          5|          1|          5|   -0.1006636000|         30|00:02:12|   NA|  NA|    NA|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:           5    mean value:    -0.1006636000
+Description of the best-so-far configuration:
+  .ID. swap_choice .PARENT.
+5    5           4       NA
+
+# 2025-07-24 13:22:58 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+  swap_choice
+5           4
+# 2025-07-24 13:22:58 -03: Iteration 2 of 2
+# experimentsUsed: 30
+# remainingBudget: 970
+# currentBudget: 970
+# nbConfigurations: 139
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded.
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|          6|        139|          5|   -0.1239930000|        139|00:02:19|   NA|  NA|    NA|
+|x|          4|        139|          5|   -0.1116450000|        277|00:04:31|+1.00|1.00|0.0000|
+|x|          1|        139|          5|   -0.1128243333|        415|00:00:06|+1.00|1.00|0.0000|
+|x|          3|        139|          5|   -0.1041127500|        553|00:00:02|+1.00|1.00|0.0000|
+|=|          5|        139|          5|   -0.1006636000|        691|00:09:28|+1.00|1.00|0.0000|
+|=|          2|        139|          5|   -0.1045518333|        829|00:02:22|+1.00|1.00|0.0000|
+|=|          7|        139|          5|   -0.1020254286|        968|00:15:27|+1.00|1.00|0.0000|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:           5    mean value:    -0.1020254286
+Description of the best-so-far configuration:
+  .ID. swap_choice .PARENT.
+5    5           4       NA
+
+# 2025-07-24 13:57:18 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+  swap_choice
+5           4
+# 2025-07-24 13:57:18 -03: Stopped because there is not enough budget left to race more than the minimum (2).
+# You may either increase the budget or set 'minNbSurvival' to a lower value.
+# Iteration: 3
+# nbIterations: 3
+# experimentsUsed: 998
+# timeUsed: 0
+# remainingBudget: 2
+# currentBudget: 2
+# number of elites: 1
+# nbConfigurations: 1
+# Total CPU user time: 8827.549, CPU sys time: 37.859, Wall-clock time: 2273.427
+# 2025-07-24 13:57:18 -03: Starting post-selection:
+# Configurations selected: 5, 7.
+# Pending instances: 0, 0.
+# 2025-07-24 13:57:18 -03: seed: 1274946889
+# Configurations: 2
+# Available experiments: 2
+# minSurvival: 1
+# Markers:
+     x No test is performed.
+     c Configurations are discarded only due to capping.
+     - The test is performed and some configurations are discarded.
+     = The test is performed but no configuration is discarded.
+     ! The test is performed and configurations could be discarded but elite configurations are preserved.
+     . All alive configurations are elite and nothing is discarded.
+
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+| |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|.|          2|          2|          5|   -0.1239930000|          0|00:00:00|   NA|  NA|    NA|
+|.|          1|          2|          5|   -0.1195880000|          0|00:00:00|+1.00|1.00|0.0000|
+|.|          7|          2|          5|   -0.1086810000|          0|00:00:00|+1.00|1.00|0.0000|
+|.|          5|          2|          5|   -0.1032275000|          0|00:00:00|+1.00|1.00|0.0000|
+|.|          4|          2|          5|   -0.1024414000|          0|00:00:00|+1.00|1.00|0.0000|
+|.|          6|          2|          5|   -0.1060333333|          0|00:00:00|+1.00|1.00|0.0000|
+|.|          3|          2|          5|   -0.1020254286|          0|00:00:00|+1.00|1.00|0.0000|
+|-|          8|          1|          5|  -0.09901950000|          2|00:00:00|   NA|  NA|    NA|
++-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+Best-so-far configuration:           5    mean value:   -0.09901950000
+Description of the best-so-far configuration:
+  .ID. swap_choice .PARENT.
+5    5           4       NA
+
+# 2025-07-24 13:57:18 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+  swap_choice
+5           4
+# Total CPU user time: 8827.623, CPU sys time: 37.902, Wall-clock time: 2273.546
+  .ID. swap_choice .PARENT. .RANK. .WEIGHT.
+5    5           4       NA      1        1

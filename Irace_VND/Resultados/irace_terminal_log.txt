@@ -1,21 +1,21 @@
-# 2025-07-22 16:48:23 -03: Initialization
+# 2025-07-24 16:58:11 -03: Initialization
 # Elitist race
 # Elitist new instances: 1
 # Elitist limit: 2
 # nbIterations: 2
-# minNbSurvival: 2
+# minNbSurvival: 1
 # nbParameters: 1
-# seed: 1985212588
+# seed: 2097589984
 # confidence level: 0.95
-# budget: 1000
+# budget: 500
 # mu: 5
 # deterministic: FALSE
 
-# 2025-07-22 16:48:23 -03: Iteration 1 of 2
+# 2025-07-24 16:58:11 -03: Iteration 1 of 2
 # experimentsUsed: 0
-# remainingBudget: 1000
-# currentBudget: 500
-# nbConfigurations: 83
+# remainingBudget: 500
+# currentBudget: 250
+# nbConfigurations: 25
 # Markers:
      x No test is performed.
      c Configurations are discarded only due to capping.
@@ -27,25 +27,25 @@
 +-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
 | |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
 +-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
-|x|          1|          8|          3|  0.005850000000|          8|00:10:46|   NA|  NA|    NA|
-|x|          2|          8|          3|  0.005850000000|         16|00:10:52|+1.00|1.00|0.0000|
-|x|          3|          8|          3|  0.005850000000|         24|00:25:55|+1.00|1.00|0.0000|
-|x|          4|          8|          3|  0.005850000000|         32|00:10:49|+1.00|1.00|0.0000|
-|-|          5|          1|          3|  0.005850000000|         40|00:38:07|   NA|  NA|    NA|
+|x|          1|          2|          1|  -0.01301400000|          2|00:00:01|   NA|  NA|    NA|
+|x|          2|          2|          1| -0.008980500000|          4|00:01:02|+1.00|1.00|0.0000|
+|x|          3|          2|          1| -0.007430000000|          6|00:00:07|+1.00|1.00|0.0000|
+|x|          4|          2|          1| -0.006857250000|          8|00:00:00|+1.00|1.00|0.0000|
+|-|          5|          1|          1| -0.006421800000|         10|00:00:25|   NA|  NA|    NA|
 +-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
-Best-so-far configuration:           3    mean value:   0.005850000000
+Best-so-far configuration:           1    mean value:  -0.006421800000
 Description of the best-so-far configuration:
   .ID. swap_choice .PARENT.
-3    3           3       NA
+1    1           2       NA
 
-# 2025-07-22 18:24:55 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
+# 2025-07-24 16:59:48 -03: Elite configurations (first number is the configuration ID; listed from best to worst according to the sum of ranks):
   swap_choice
-3           3
-# 2025-07-22 18:24:55 -03: Iteration 2 of 2
-# experimentsUsed: 40
-# remainingBudget: 960
-# currentBudget: 960
-# nbConfigurations: 137
+1           2
+# 2025-07-24 16:59:48 -03: Iteration 2 of 2
+# experimentsUsed: 10
+# remainingBudget: 490
+# currentBudget: 490
+# nbConfigurations: 33
 # Markers:
      x No test is performed.
      c Configurations are discarded only due to capping.
@@ -57,3 +57,16 @@ Description of the best-so-far configuration:
 +-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
 | |   Instance|      Alive|       Best|       Mean best| Exp so far|  W time|  rho|KenW|  Qvar|
 +-+-----------+-----------+-----------+----------------+-----------+--------+-----+----+------+
+|x|          6|         33|          1| -0.004329000000|         33|00:00:51|   NA|  NA|    NA|
+|x|          4|         33|          1| -0.004734000000|         65|00:00:00|+1.00|1.00|0.0000|
+|x|          1|         33|          1| -0.007494000000|         97|00:00:01|+1.00|1.00|0.0000|
+|x|          3|         33|          1| -0.006702750000|        129|00:00:51|+1.00|1.00|0.0000|
+|=|          2|         33|          1| -0.006351600000|        161|00:07:35|+1.00|1.00|0.0000|
+|x|          5|         33|          1| -0.006073000000|        193|00:03:05|+1.00|1.00|0.0000|
+|x|          7|         33|          1| -0.005912142857|        226|01:46:25|+1.00|1.00|0.0000|
+|x|          8|         33|          1| -0.005815500000|        259|00:00:00|+1.00|1.00|0.0000|
+|x|          9|         33|          1| -0.005689333333|        292|05:13:59|+1.00|1.00|0.0000|
+|=|         10|         33|          1| -0.006421800000|        325|00:12:41|+1.00|1.00|0.0000|
+|x|         11|         33|          1| -0.007021090909|        358|00:00:01|+1.00|1.00|0.0000|
+|x|         12|         33|          1| -0.006796750000|        391|00:39:04|+1.00|1.00|0.0000|
+|x|         13|         33|          1| -0.006633923077|        424|00:03:12|+1.00|1.00|0.0000|

@@ -177,46 +177,80 @@ void printProblem(Problem p) {
 }
 
 void writeSolution(Solution S, FILE * fl){
-fprintf(fl, "<task_id>\t <FX/VM id>\t <Custo_fin>\t <Tempo_workflow>\t <Custo_Normalizado>\n");
+//fprintf(fl, "<task_id>\t <FX/VM id>\t <Custo_fin>\t <Tempo_workflow>\t <Custo_Normalizado>\n");
     for(int i = 0; i < S.vet_tripla.size(); i++){
         if(S.vet_tripla[i].type == 0){
-            fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  VM\n", S.vet_tripla[i].task_id, S.vet_tripla[i].vm_id, S.vet_tripla[i].vm_cost_total, S.vet_tripla[i].vm_time_total, S.vet_tripla[i].cost);
+            //fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  VM\n", S.vet_tripla[i].task_id, S.vet_tripla[i].vm_id, S.vet_tripla[i].vm_cost_total, S.vet_tripla[i].vm_time_total, S.vet_tripla[i].cost);
         }
         else{
-            fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  FX\n", S.vet_tripla[i].task_id, S.vet_tripla[i].config_id, S.vet_tripla[i].task_p_config_cost, S.vet_tripla[i].task_time_total, S.vet_tripla[i].cost);
+            //fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  FX\n", S.vet_tripla[i].task_id, S.vet_tripla[i].config_id, S.vet_tripla[i].task_p_config_cost, S.vet_tripla[i].task_time_total, S.vet_tripla[i].cost);
         }
     }
     return;
 }
 
+// Função para criar pastas e arquivos de resultados (não utilizada no Irace)
+// int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancias) {
+//     FILE* fsum = fopen("Irace_VND/Entradas_Irace/teste.txt", "r");
+//     if (!fsum) return 0;
+//     char nome_inst[128];
+//     int count = 0;
+//     while (fscanf(fsum, "%127s", nome_inst) == 1) {
+//         strcpy(caminhos_instancias[count], nome_inst);
+//         count++;
+//     }
+//     fclose(fsum);
+//     *n_instancias = count;
+//     // Data/hora
+//     time_t now = time(NULL);
+//     struct tm* t = localtime(&now);
+//     char pasta_base[256];
+//     // snprintf(pasta_base, sizeof(pasta_base), "Resultados/A%d_M%d_D%d_H%d_m%d_P%.2f",t->tm_year+1900, t->tm_mon+1, t->tm_mday, t->tm_hour, t->tm_min, phi);
+//     // mkdir("Resultados", 0777);
+//     // mkdir(pasta_base, 0777);
+//     // Cria arquivo de contexto vazio
+//     // char caminho_contexto[300];
+//     // snprintf(caminho_contexto, sizeof(caminho_contexto), "%s/contexto_execucao.txt", pasta_base);
+//     // FILE* fcontext = fopen(caminho_contexto, "w");
+//     // if (fcontext) fclose(fcontext);
+//     // for (int i = 0; i < count; i++) {
+//     //     char pasta_inst[256];
+//     //     snprintf(pasta_inst, sizeof(pasta_inst), "%s/%s", pasta_base, caminhos_instancias[i]);
+//     //     mkdir(pasta_inst, 0777);
+//     //     strcpy(caminhos_instancias[i], pasta_inst);
+//     // }
+//     return 1;
+// }
+
+// Função para criar arquivos de saída (não utilizada no Irace)
 void setupOutputFiles(const char* caminho_base, char* caminho_geral, char* caminho_final) {
     // Construir caminho para res_geral.txt
-    strcpy(caminho_geral, caminho_base);
-    strcat(caminho_geral, "/res_geral.txt");
+    // strcpy(caminho_geral, caminho_base);
+    // strcat(caminho_geral, "/res_geral.txt");
 
     // Construir caminho para res_final.txt
-    strcpy(caminho_final, caminho_base);
-    strcat(caminho_final, "/res_final.txt");
+    // strcpy(caminho_final, caminho_base);
+    // strcat(caminho_final, "/res_final.txt");
 
     // Criar/limpar arquivo res_final.txt
-    FILE* fs = fopen(caminho_final, "w");
-    if (!fs) {
-        cerr << "Erro ao criar arquivo: " << caminho_final << endl;
-        exit(1);
-    }
-    fprintf(fs, "<Instância> \t <Custo_Financeiro_Melhor> \t <Tempo_Melhor> \t <Custo_Normalizado_Melhor> \t <Custo_Normalizado_Médio> \t <Tempo_CPU_Médio>\n \n");
-    fclose(fs);
+    // FILE* fs = fopen(caminho_final, "w");
+    // if (!fs) {
+    //     cerr << "Erro ao criar arquivo: " << caminho_final << endl;
+    //     exit(1);
+    // }
+    // fprintf(fs, "<Instância> \t <Custo_Financeiro_Melhor> \t <Tempo_Melhor> \t <Custo_Normalizado_Melhor> \t <Custo_Normalizado_Médio> \t <Tempo_CPU_Médio>\n \n");
+    // fclose(fs);
 
     // Criar/limpar arquivo res_geral.txt
-    FILE* fl = fopen(caminho_geral, "w");
-    if (!fl) {
-        cerr << "Erro ao criar arquivo: " << caminho_geral << endl;
-        exit(1);
-    }
-    fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\t <Custo_Financeiro> \t <Tempo_Workflow>\n");
-    fclose(fl);
+    // FILE* fl = fopen(caminho_geral, "w");
+    // if (!fl) {
+    //     cerr << "Erro ao criar arquivo: " << caminho_geral << endl;
+    //     exit(1);
+    // }
+    // fprintf(fl, "<Instância> \t <Semente> \t <Melhor_Custo> \t <Tempo_CPU>\t <Custo_Financeiro> \t <Tempo_Workflow>\n");
+    // fclose(fl);
 
-    return;
+    // return;
 }
 
 Solution Multistart(Problem p, float alpha, float phi, int repeticoes, int seed, double& tempo_exec) {
@@ -241,31 +275,31 @@ Solution Multistart(Problem p, float alpha, float phi, int repeticoes, int seed,
     return melhor_sol;
 }
 
-void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_instancia, double custo_medio, double tempo_medio, int swap_choice) {
+void VND(Solution& solucao, Problem p, float phi, const char* nome_instancia, double custo_medio, double tempo_medio, int swap_choice) {
     Solution S_atual = solucao;
     Solution S_melhor = solucao;
     switch (swap_choice) {
-        case 1:
-            do {
-                S_atual = Swap_Machine(S_atual, p, phi);
-                if (S_atual.cost < S_melhor.cost) {
-                    S_melhor = S_atual;
-                } else {
-                    break;
-                }
-            } while (true);
-            break;
-        case 2:
-            do {
-                S_atual = Swap_Config(S_atual, p, phi);
-                if (S_atual.cost < S_melhor.cost) {
-                    S_melhor = S_atual;
-                } else {
-                    break;
-                }
-            } while (true);
-            break;
-        case 3:
+        // case 1:
+        //     do {
+        //         S_atual = Swap_Machine(S_atual, p, phi);
+        //         if (S_atual.cost < S_melhor.cost) {
+        //             S_melhor = S_atual;
+        //         } else {
+        //             break;
+        //         }
+        //     } while (true);
+        //     break;
+        // case 2:
+        //     do {
+        //         S_atual = Swap_Config(S_atual, p, phi);
+        //         if (S_atual.cost < S_melhor.cost) {
+        //             S_melhor = S_atual;
+        //         } else {
+        //             break;
+        //         }
+        //     } while (true);
+        //     break;
+        case 1: //3
             do {
                 S_atual = Swap_MachineToConfig(S_atual, p, phi);
                 if (S_atual.cost < S_melhor.cost) {
@@ -275,17 +309,17 @@ void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_ins
                 }
             } while (true);
             break;
-        case 4:
-            do {
-                S_atual = Swap_ConfigToMachine(S_atual, p, phi);
-                if (S_atual.cost < S_melhor.cost) {
-                    S_melhor = S_atual;
-                } else {
-                    break;
-                }
-            } while (true);
-            break;
-        case 5:
+        // case 4:
+        //     do {
+        //         S_atual = Swap_ConfigToMachine(S_atual, p, phi);
+        //         if (S_atual.cost < S_melhor.cost) {
+        //             S_melhor = S_atual;
+        //         } else {
+        //             break;
+        //         }
+        //     } while (true);
+        //     break;
+        case 2: //5
             do {
                 S_atual = Swap_MachinePair(S_atual, p, phi);
                 if (S_atual.cost < S_melhor.cost) {
@@ -295,36 +329,36 @@ void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_ins
                 }
             } while (true);
             break;
-        case 6:
-            do {
-                S_atual = Swap_ConfigPair(S_atual, p, phi);
-                if (S_atual.cost < S_melhor.cost) {
-                    S_melhor = S_atual;
-                } else {
-                    break;
-                }
-            } while (true);
-            break;
-        case 7:
-            do {
-                S_atual = SwapMachineConfig_Pair(S_atual, p, phi);
-                if (S_atual.cost < S_melhor.cost) {
-                    S_melhor = S_atual;
-                } else {
-                    break;
-                }
-            } while (true);
-            break;
-        case 8:
-            do {
-                S_atual = SwapConfigMachine_Pair(S_atual, p, phi);
-                if (S_atual.cost < S_melhor.cost) {
-                    S_melhor = S_atual;
-                } else {
-                    break;
-                }
-            } while (true);
-            break;
+        // case 3: //6
+        //     do {
+        //         S_atual = Swap_ConfigPair(S_atual, p, phi);
+        //         if (S_atual.cost < S_melhor.cost) {
+        //             S_melhor = S_atual;
+        //         } else {
+        //             break;
+        //         }
+        //     } while (true);
+        //     break;
+        // case 4: //7
+        //     do {
+        //         S_atual = SwapMachineConfig_Pair(S_atual, p, phi);
+        //         if (S_atual.cost < S_melhor.cost) {
+        //             S_melhor = S_atual;
+        //         } else {
+        //             break;
+        //         }
+        //     } while (true);
+        //     break;
+        // case 5: //8
+        //     do {
+        //         S_atual = SwapConfigMachine_Pair(S_atual, p, phi);
+        //         if (S_atual.cost < S_melhor.cost) {
+        //             S_melhor = S_atual;
+        //         } else {
+        //             break;
+        //         }
+        //     } while (true);
+        //     break;
         default:
             break;
     }
@@ -333,11 +367,11 @@ void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_ins
 }
 
 void processInstance(const char* nome_instancia, const char* caminho_geral, const char* caminho_final, float alpha, float phi, int repeticoes, int swap_choice) {
-    char caminho_completo[300];
-    strcpy(caminho_completo, "Irace_VND/Entradas_Irace/");
-    strcat(caminho_completo, nome_instancia);
+    // char caminho_completo[300];
+    // strcpy(caminho_completo, "Irace_VND/Entradas_Irace/");
+    // strcat(caminho_completo, nome_instancia);
 
-    Problem p = readData(caminho_completo);
+    Problem p = readData(nome_instancia);
     p.max_fin_cost = calculateMaxFinancialCost(p);
     p.max_runtime = calculateMaxRuntime(p);
     //printProblem(p);
@@ -366,61 +400,29 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
         }
 
         // Escrever resultados gerais
-        FILE* fl = fopen(caminho_geral, "a");
-        fprintf(fl, "%s\t %d\t %.15f\t %f\t %f\t %f\n", 
-                nome_instancia, seed, sol.cost, tempo_exec, sol.financial_cost, sol.time);
-        writeSolution(sol, fl);
-        fprintf(fl, "========================================================================\n");
-        fclose(fl);
+        // FILE* fl = fopen(caminho_geral, "a");
+        // fprintf(fl, "%s\t %d\t %.15f\t %f\t %f\t %f\n", 
+        //         nome_instancia, seed, sol.cost, tempo_exec, sol.financial_cost, sol.time);
+        // writeSolution(sol, fl);
+        // fprintf(fl, "========================================================================\n");
+        // fclose(fl);
     }
 
     custo_medio /= 1.0;
     tempo_medio /= 1.0;
 
     // Escrever resultados finais
-    FILE* fs = fopen(caminho_final, "a");
-    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", 
-            nome_instancia, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_medio, tempo_medio);
-    // Aplicar busca local
-    VND(melhor_solucao, p, phi, fs, nome_instancia, custo_medio, tempo_medio, swap_choice);
-    fprintf(fs, "====================================================================\n\n\n");
-    fclose(fs);
+    //FILE* fs = fopen(caminho_final, "a");
+    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", 
+    //         nome_instancia, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_medio, tempo_medio);
+    // // Aplicar busca local
+    VND(melhor_solucao, p, phi, nome_instancia, custo_medio, tempo_medio, swap_choice);
+    // fprintf(fs, "====================================================================\n\n\n");
+    //fclose(fs);
 
     // Após o VND, imprime a diferença entre o custo original e o custo após VND
     double diferenca = melhor_custo - melhor_solucao.cost;
     printf("%f\n", diferenca);
-}
-
-int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancias) {
-    FILE* fsum = fopen("Irace_VND/Entradas_Irace/teste.txt", "r");
-    if (!fsum) return 0;
-    char nome_inst[128];
-    int count = 0;
-    while (fscanf(fsum, "%127s", nome_inst) == 1) {
-        strcpy(caminhos_instancias[count], nome_inst);
-        count++;
-    }
-    fclose(fsum);
-    *n_instancias = count;
-    // Data/hora
-    time_t now = time(NULL);
-    struct tm* t = localtime(&now);
-    char pasta_base[256];
-    snprintf(pasta_base, sizeof(pasta_base), "Resultados/A%d_M%d_D%d_H%d_m%d_P%.2f",t->tm_year+1900, t->tm_mon+1, t->tm_mday, t->tm_hour, t->tm_min, phi);
-    mkdir("Resultados", 0777);
-    mkdir(pasta_base, 0777);
-    // Cria arquivo de contexto vazio
-    char caminho_contexto[300];
-    snprintf(caminho_contexto, sizeof(caminho_contexto), "%s/contexto_execucao.txt", pasta_base);
-    FILE* fcontext = fopen(caminho_contexto, "w");
-    if (fcontext) fclose(fcontext);
-    for (int i = 0; i < count; i++) {
-        char pasta_inst[256];
-        snprintf(pasta_inst, sizeof(pasta_inst), "%s/%s", pasta_base, caminhos_instancias[i]);
-        mkdir(pasta_inst, 0777);
-        strcpy(caminhos_instancias[i], pasta_inst);
-    }
-    return 1;
 }
 
 int readInstanceNames(const char* filename, char instance_names[][128], int max_instances) {

@@ -1,1 +1,1 @@
-swap_choice "" i (1, 8)  # Swap a ser testado (inteiro de 1 a 8)
+swap_choice "" i (1, 2)  # Swap a ser testado (inteiro de 1 a 8)
