@@ -340,3 +340,85 @@ Solution SwapConfigMachine_Pair(Solution S, Problem p, float phi) {
     }
     return S;
 }
+
+void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_instancia, double custo_medio, double tempo_medio) {
+    Solution S_atual = solucao;
+    Solution S_melhor = solucao;
+    bool melhoria = true;
+
+    while (melhoria) {
+        melhoria = false;
+
+        // 1. SwapConfig (2)
+        S_atual = Swap_Config(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 2. SwapMachine (1)
+        S_atual = Swap_Machine(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 3. SwapConfigToMachine (4)
+        S_atual = Swap_ConfigToMachine(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 4. SwapConfigMachine_Pair (8)
+        S_atual = SwapConfigMachine_Pair(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 5. SwapMachineConfig_Pair (7)
+        S_atual = SwapMachineConfig_Pair(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 6. SwapConfig_Pair (6)
+        S_atual = Swap_ConfigPair(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 7. SwapMachine_Pair (5)
+        S_atual = Swap_MachinePair(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+
+        // 8. Swap_MachineToConfig (3)
+        S_atual = Swap_MachineToConfig(S_melhor, p, phi);
+        if (S_atual.cost < S_melhor.cost) {
+            S_melhor = S_atual;
+            melhoria = true;
+            continue;
+        }
+    }
+
+    // Atualiza a solução de entrada com a melhor encontrada
+    solucao = S_melhor;
+
+    // Registra no arquivo de saída
+    fprintf(fs, "----------------------------VND FINAL RESULT----------------------------------------------\n");
+    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", 
+            nome_instancia, solucao.financial_cost, solucao.time, solucao.cost, custo_medio, tempo_medio);
+}
