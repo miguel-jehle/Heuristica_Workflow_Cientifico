@@ -85,7 +85,7 @@ Problem readData(const char* arquivo) {
     fscanf(fp, "%199[^\n]", temp); // Lê o quarto header (novo formato de VMs)
     Machine m_aux;
     for(int i = 0; i < p.vms; i++) {
-        fscanf(fp, "%d %lf %f %d %d ", &m_aux.id, &m_aux.slowdown, &m_aux.cost, &m_aux.storage, &m_aux.bandwith);
+        fscanf(fp, "%d %lf %lf %d %d ", &m_aux.id, &m_aux.slowdown, &m_aux.cost, &m_aux.storage, &m_aux.bandwith);
         p.vet_machine.push_back(m_aux);
     }
 
@@ -299,7 +299,7 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
 }
 
 int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancias) {
-    FILE* fsum = fopen("Instancias/sumario.txt", "r");
+    FILE* fsum = fopen("Instancias/teste.txt", "r");
     if (!fsum) return 0;
     char nome_inst[128];
     int count = 0;
@@ -322,7 +322,7 @@ int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancia
     FILE* fcontext = fopen(caminho_contexto, "w");
     if (fcontext) fclose(fcontext);
     for (int i = 0; i < count; i++) {
-        char pasta_inst[256];
+        char pasta_inst[300];
         snprintf(pasta_inst, sizeof(pasta_inst), "%s/%s", pasta_base, caminhos_instancias[i]);
         mkdir(pasta_inst, 0777);
         strcpy(caminhos_instancias[i], pasta_inst);

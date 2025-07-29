@@ -1,6 +1,7 @@
 #include "busca_local.h"
 #include "construtivo.h"  // Para funções de cálculo
 #include "Base.h"
+#include <stdio.h>
 
 Solution Swap_Machine(Solution S, Problem p, float phi){
     Solution S_atual = S;
@@ -11,10 +12,11 @@ Solution Swap_Machine(Solution S, Problem p, float phi){
                 
                 // Usa o índice direto
                 int k = S_atual.vet_tripla[i].task_index;
+                Tripla vizinho;
                 double tempo_novo = calculateVMTime(p, p.vet_tasks[k], p.vet_machine[j])*p.vet_machine[j].slowdown;
                 double custo_finan_novo = p.vet_machine[j].cost * p.vet_machine[j].slowdown * tempo_novo;
 
-                Tripla vizinho;
+                
                 vizinho.vm_cost_total = custo_finan_novo;
                 vizinho.vm_time_total = tempo_novo;
                 

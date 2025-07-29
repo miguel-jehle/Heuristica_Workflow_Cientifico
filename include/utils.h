@@ -1,5 +1,6 @@
 #pragma once
 #include "Base.h"
+#include <stdio.h>
 
 void getCPUTime(double *seg_CPU_total, double *seg_sistema_total);
 Problem readData(const char* arquivo);

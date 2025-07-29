@@ -54,7 +54,7 @@ struct Machine{
     int id; 
     double slowdown;
     int storage;
-    float cost;
+    double cost;
     int bandwith;
     double temp_rest;
 };
