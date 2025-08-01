@@ -219,7 +219,7 @@ void setupOutputFiles(const char* caminho_base, char* caminho_geral, char* camin
     return;
 }
 
-Solution Multistart(Problem p, float alpha, float phi, int repeticoes, int seed, double& tempo_exec) {
+Solution GRASP_VND(Problem p, float alpha, float phi, int repeticoes, int seed, double& tempo_exec) {
     double inicio_cpu, inicio_sistema, fim_cpu, fim_sistema;
     Solution melhor_sol;
     float melhor_custo = __FLT_MAX__;
@@ -228,6 +228,7 @@ Solution Multistart(Problem p, float alpha, float phi, int repeticoes, int seed,
 
     for (int i = 0; i < repeticoes; i++) {
         Solution sol = constructiveHeuristic(alpha, phi, &seed, p);
+        VND(melhor_sol, p, phi);
         if (sol.cost < melhor_custo) {
             melhor_custo = sol.cost;
             melhor_sol = sol;
@@ -262,7 +263,7 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
     for (int i = 0; i < 1; i++) {
         int seed = i + 1;
         double tempo_exec;
-        Solution sol = Multistart(p, alpha, phi, repeticoes, seed, tempo_exec);
+        Solution sol = GRASP_VND(p, alpha, phi, repeticoes, seed, tempo_exec);
         
         custo_medio += sol.cost;
         tempo_medio += tempo_exec;
@@ -291,15 +292,12 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
     fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", 
             nome_instancia, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_medio, tempo_medio);
     
-    // Aplicar busca local
-    VND(melhor_solucao, p, phi, fs, nome_instancia, custo_medio, tempo_medio);
-    
     fprintf(fs, "====================================================================\n\n\n");
     fclose(fs);
 }
 
 int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancias) {
-    FILE* fsum = fopen("Instancias/teste.txt", "r");
+    FILE* fsum = fopen("Instancias/sumario.txt", "r");
     if (!fsum) return 0;
     char nome_inst[128];
     int count = 0;

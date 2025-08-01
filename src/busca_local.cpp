@@ -343,7 +343,7 @@ Solution SwapConfigMachine_Pair(Solution S, Problem p, float phi) {
     return S;
 }
 
-void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_instancia, double custo_medio, double tempo_medio) {
+void VND(Solution& solucao, Problem p, float phi) {
     Solution S_atual = solucao;
     Solution S_melhor = solucao;
     bool melhoria = true;
@@ -419,8 +419,8 @@ void VND(Solution& solucao, Problem p, float phi, FILE* fs, const char* nome_ins
     // Atualiza a solução de entrada com a melhor encontrada
     solucao = S_melhor;
 
-    // Registra no arquivo de saída
-    fprintf(fs, "----------------------------VND FINAL RESULT----------------------------------------------\n");
-    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", 
-            nome_instancia, solucao.financial_cost, solucao.time, solucao.cost, custo_medio, tempo_medio);
+    // // Registra no arquivo de saída
+    // fprintf(fs, "----------------------------VND FINAL RESULT----------------------------------------------\n");
+    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", 
+    //         nome_instancia, solucao.financial_cost, solucao.time, solucao.cost, custo_medio, tempo_medio);
 }

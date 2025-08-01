@@ -1,0 +1,1 @@
+Teste do GRASP-VND com 200 de max_iter, a média e o melhor estão com valsores iguais, talvez uma segunda exec agora com 10 seeds distantas ajude nisso
