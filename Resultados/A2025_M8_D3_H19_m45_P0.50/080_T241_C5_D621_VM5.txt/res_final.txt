@@ -1,0 +1,6 @@
+<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
+ 
+080_T241_C5_D621_VM5.txt	 0.000167	 59.928370	 0.000428	 0.005114	 14622.910528
+====================================================================
+
+

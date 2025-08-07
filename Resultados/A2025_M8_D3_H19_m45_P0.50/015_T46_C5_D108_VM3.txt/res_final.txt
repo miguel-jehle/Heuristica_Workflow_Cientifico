@@ -1,0 +1,6 @@
+<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
+ 
+015_T46_C5_D108_VM3.txt	 0.000301	 123.533484	 0.008545	 0.100476	 137.015767
+====================================================================
+
+

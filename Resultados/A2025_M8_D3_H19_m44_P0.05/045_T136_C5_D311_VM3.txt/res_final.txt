@@ -1,0 +1,6 @@
+<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
+ 
+045_T136_C5_D311_VM3.txt	 0.004095	 1255.207302	 0.004182	 0.063119	 4781.811970
+====================================================================
+
+

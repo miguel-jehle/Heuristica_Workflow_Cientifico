@@ -1,0 +1,6 @@
+<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
+ 
+050_T151_C5_D411_VM3.txt	 0.004924	 2167.573984	 0.006552	 0.074061	 9874.650631
+====================================================================
+
+

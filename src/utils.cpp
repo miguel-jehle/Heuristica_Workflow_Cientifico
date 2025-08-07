@@ -260,7 +260,7 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
     double tempo_melhor = 0.0;
 
     // Loop principal de sementes (originalmente 1 iteração)
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 10; i++) {
         int seed = i + 1;
         double tempo_exec;
         Solution sol = GRASP_VND(p, alpha, phi, repeticoes, seed, tempo_exec);
@@ -297,7 +297,7 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
 }
 
 int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancias) {
-    FILE* fsum = fopen("Instancias/sumario.txt", "r");
+    FILE* fsum = fopen("Instancias/teste.txt", "r");
     if (!fsum) return 0;
     char nome_inst[128];
     int count = 0;
