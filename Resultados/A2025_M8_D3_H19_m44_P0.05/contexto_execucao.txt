@@ -1,0 +1,1 @@
+Resultado final do GRASP-VND sozinho, com 200 max_iter, 10 seeds e phi de 0.05 
