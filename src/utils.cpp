@@ -8,6 +8,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#include <math.h>
 
 using namespace std;
 
@@ -228,7 +229,7 @@ Solution GRASP_VND(Problem p, float alpha, float phi, int repeticoes, int seed, 
 
     for (int i = 0; i < repeticoes; i++) {
         Solution sol = constructiveHeuristic(alpha, phi, &seed, p);
-        VND(melhor_sol, p, phi);
+        VND(sol, p, phi);
         if (sol.cost < melhor_custo) {
             melhor_custo = sol.cost;
             melhor_sol = sol;
@@ -297,7 +298,7 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
 }
 
 int setupRunFolders(float phi, char caminhos_instancias[][256], int* n_instancias) {
-    FILE* fsum = fopen("Instancias/teste.txt", "r");
+    FILE* fsum = fopen("Instancias/sumario.txt", "r");
     if (!fsum) return 0;
     char nome_inst[128];
     int count = 0;
