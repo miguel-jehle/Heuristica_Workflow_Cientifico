@@ -1,6 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-060_T181_C5_D481_VM5.txt	 0.000186	 58.977131	 0.001467	 0.001467	 1607.633298
-====================================================================
-
-

@@ -1,6 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-020_T61_C5_D138_VM3.txt	 0.000502	 208.594268	 0.008291	 0.092731	 331.576402
-====================================================================
-
-

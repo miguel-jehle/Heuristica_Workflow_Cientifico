@@ -1,6 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-005_T16_C5_D38_VM3.txt	 0.000083	 21.041425	 0.003778	 0.088077	 6.504970
-====================================================================
-
-

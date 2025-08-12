@@ -1,6 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-002_T7_C5_D14_VM3.txt	 0.000014	 3.420050	 0.005449	 0.005449	 0.085443
-====================================================================
-
-

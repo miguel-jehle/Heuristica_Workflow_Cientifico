@@ -1,6 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-025_T76_C5_D220_VM3.txt	 0.001572	 438.491141	 0.008563	 0.008563	 90.960264
-====================================================================
-
-

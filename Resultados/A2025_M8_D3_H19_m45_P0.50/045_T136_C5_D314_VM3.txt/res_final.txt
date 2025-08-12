@@ -1,6 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-045_T136_C5_D314_VM3.txt	 0.002696	 1132.751250	 0.007215	 0.080347	 4998.707715
-====================================================================
-
-

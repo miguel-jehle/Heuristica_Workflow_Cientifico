@@ -1,6 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-010_T31_C5_D71_VM3.txt	 0.000203	 52.661148	 0.007004	 0.007004	 3.959757
-====================================================================
-
-

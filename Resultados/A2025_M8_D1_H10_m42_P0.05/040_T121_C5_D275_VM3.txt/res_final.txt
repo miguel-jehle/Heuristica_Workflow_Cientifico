@@ -1,6 +1,0 @@
-<Instância> 	 <Custo_Financeiro_Melhor> 	 <Tempo_Melhor> 	 <Custo_Normalizado_Melhor> 	 <Custo_Normalizado_Médio> 	 <Tempo_CPU_Médio>
- 
-040_T121_C5_D275_VM3.txt	 0.002814	 790.168055	 0.006843	 0.006843	 321.747510
-====================================================================
-
-
