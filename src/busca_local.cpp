@@ -28,9 +28,9 @@ Solution Swap_Machine(Solution S, Problem p, float phi){
                     S_atual.vet_tripla[i].vm_time_total = vizinho.vm_time_total;
                     S_atual.vet_tripla[i].vm_id = p.vet_machine[j].id;
                     S_atual.vet_tripla[i].vm_slowdown = p.vet_machine[j].slowdown;
-                    S_atual.cost = calculateTotalCost(S_atual);
                     S_atual.financial_cost = calculateFinancialCost(S_atual);
                     S_atual.time = calculateTotalTime(S_atual);
+                    S_atual.cost = normalizeSolution(S_atual, phi, p.max_fin_cost, p.max_runtime);
                     return S_atual;
                 }
             }
@@ -57,9 +57,9 @@ Solution Swap_Config(Solution S, Problem p, float phi){
                     S_atual.vet_tripla[i].task_p_config_cost = vizinho.task_p_config_cost;
                     S_atual.vet_tripla[i].task_time_total = vizinho.task_time_total;
                     S_atual.vet_tripla[i].config_id = p.vet_tasks[idx_task].vet_config[k].config_id;
-                    S_atual.cost = calculateTotalCost(S_atual);
                     S_atual.financial_cost = calculateFinancialCost(S_atual);
                     S_atual.time = calculateTotalTime(S_atual);
+                    S_atual.cost = normalizeSolution(S_atual, phi, p.max_fin_cost, p.max_runtime);
                     return S_atual;
                 }
             }
@@ -82,9 +82,9 @@ Solution Try_Swap_MachineToConfig(Solution S, Problem p, int idx_task, float phi
         vizinho.cost = normalizeCandidateCost(vizinho, phi, p.max_fin_cost, p.max_runtime);
         if (vizinho.cost < S_atual.vet_tripla[idx_task].cost) {
             S_atual.vet_tripla[idx_task] = vizinho;
-            S_atual.cost = calculateTotalCost(S_atual);
             S_atual.financial_cost = calculateFinancialCost(S_atual);
             S_atual.time = calculateTotalTime(S_atual);
+            S_atual.cost = normalizeSolution(S_atual, phi, p.max_fin_cost, p.max_runtime);
             return S_atual;
         }
     }
@@ -119,9 +119,9 @@ Solution Try_Swap_ConfigToMachine(Solution S, Problem p, int idx_task, float phi
         vizinho.cost = normalizeCandidateCost(vizinho, phi, p.max_fin_cost, p.max_runtime);
         if (vizinho.cost < S_atual.vet_tripla[idx_task].cost) {
             S_atual.vet_tripla[idx_task] = vizinho;
-            S_atual.cost = calculateTotalCost(S_atual);
             S_atual.financial_cost = calculateFinancialCost(S_atual);
             S_atual.time = calculateTotalTime(S_atual);
+            S_atual.cost = normalizeSolution(S_atual, phi, p.max_fin_cost, p.max_runtime);
             return S_atual;
         }
     }
@@ -168,9 +168,9 @@ Solution Swap_MachinePair(Solution S, Problem p, float phi) {
             S_vizinho.vet_tripla[j].vm_time_total = calculateVMTime(p, p.vet_tasks[idx_task_j], p.vet_machine[S_vizinho.vet_tripla[j].vm_id]);
             S_vizinho.vet_tripla[j].vm_cost_total = p.vet_machine[S_vizinho.vet_tripla[j].vm_id].cost * p.vet_machine[S_vizinho.vet_tripla[j].vm_id].slowdown * S_vizinho.vet_tripla[j].vm_time_total;
             S_vizinho.vet_tripla[j].cost = normalizeCandidateCost(S_vizinho.vet_tripla[j], phi, p.max_fin_cost, p.max_runtime);
-            S_vizinho.cost = calculateTotalCost(S_vizinho);
             S_vizinho.financial_cost = calculateFinancialCost(S_vizinho);
             S_vizinho.time = calculateTotalTime(S_vizinho);
+            S_vizinho.cost = normalizeSolution(S_vizinho, phi, p.max_fin_cost, p.max_runtime);
             if (S_vizinho.cost < S_atual.cost) {
                 return S_vizinho;
             }
@@ -211,9 +211,9 @@ Solution Swap_ConfigPair(Solution S, Problem p, float phi) {
             S_vizinho.vet_tripla[j].task_time_total = conf_j->task_time_total;
             S_vizinho.vet_tripla[j].task_p_config_cost = conf_j->task_p_config_cost;
             S_vizinho.vet_tripla[j].cost = normalizeCandidateCost(S_vizinho.vet_tripla[j], phi, p.max_fin_cost, p.max_runtime);
-            S_vizinho.cost = calculateTotalCost(S_vizinho);
             S_vizinho.financial_cost = calculateFinancialCost(S_vizinho);
             S_vizinho.time = calculateTotalTime(S_vizinho);
+            S_vizinho.cost = normalizeSolution(S_vizinho, phi, p.max_fin_cost, p.max_runtime);
             if (S_vizinho.cost < S_atual.cost) {
                 return S_vizinho;
             }
@@ -268,9 +268,9 @@ Solution SwapMachineConfig_Pair(Solution S, Problem p, float phi) {
             S_vizinho.vet_tripla[j].vm_cost_total = p.vet_machine[vm_i].cost * p.vet_machine[vm_i].slowdown * S_vizinho.vet_tripla[j].vm_time_total;
             S_vizinho.vet_tripla[j].cost = normalizeCandidateCost(S_vizinho.vet_tripla[j], phi, p.max_fin_cost, p.max_runtime);
             // -------- Atualiza custos totais da solução -------- //
-            S_vizinho.cost = calculateTotalCost(S_vizinho);
             S_vizinho.financial_cost = calculateFinancialCost(S_vizinho);
             S_vizinho.time = calculateTotalTime(S_vizinho);
+            S_vizinho.cost = normalizeSolution(S_vizinho, phi, p.max_fin_cost, p.max_runtime);
             // Se encontrou solução melhor, retorna
             if (S_vizinho.cost < S_atual.cost) {
                 return S_vizinho;
@@ -331,9 +331,9 @@ Solution SwapConfigMachine_Pair(Solution S, Problem p, float phi) {
             S_vizinho.vet_tripla[j].task_p_config_cost = p.vet_tasks[idx_task_j].vet_config[conf_idx_j].task_p_config_cost;
             S_vizinho.vet_tripla[j].cost = normalizeCandidateCost(S_vizinho.vet_tripla[j], phi, p.max_fin_cost, p.max_runtime);
             // -------- Atualiza custos totais da solução -------- //
-            S_vizinho.cost = calculateTotalCost(S_vizinho);
             S_vizinho.financial_cost = calculateFinancialCost(S_vizinho);
             S_vizinho.time = calculateTotalTime(S_vizinho);
+            S_vizinho.cost = normalizeSolution(S_vizinho, phi, p.max_fin_cost, p.max_runtime);
             // Se encontrou solução melhor, retorna
             if (S_vizinho.cost < S_atual.cost) {
                 return S_vizinho;
