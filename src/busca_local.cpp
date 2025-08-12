@@ -13,7 +13,7 @@ Solution Swap_Machine(Solution S, Problem p, float phi){
                 // Usa o índice direto
                 int k = S_atual.vet_tripla[i].task_index;
                 Tripla vizinho;
-                double tempo_novo = calculateVMTime(p, p.vet_tasks[k], p.vet_machine[j])
+                double tempo_novo = calculateVMTime(p, p.vet_tasks[k], p.vet_machine[j]);
                 double custo_finan_novo = p.vet_machine[j].cost * tempo_novo;
 
                 
