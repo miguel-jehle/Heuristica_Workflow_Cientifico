@@ -309,3 +309,9 @@ double normalizeCandidateCost(Tripla T, float phi, double max_fin_cost, double m
 
     return phi * (T.vm_time_total/max_runtine) + (1 - phi) * (T.vm_cost_total/max_fin_cost);
 }
+
+//========================================================================================================================================
+
+double normalizeSolution(Solution S, float phi, double max_fin_cost, double max_runtine){
+    return phi * (S.time/max_runtine) + (1 - phi) * (S.financial_cost/max_fin_cost);
+}

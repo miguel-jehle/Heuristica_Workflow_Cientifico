@@ -18,4 +18,5 @@ double calculateFinancialCost(Solution S);
 double calculateMaxFinancialCost(Problem p);
 double calculateMaxRuntime(Problem p);
 double normalizeCandidateCost(Tripla T, float phi, double max_fin_cost, double max_runtine);
+double normalizeSolution(Solution S, float phi, double max_fin_cost, double max_runtine);
 void printSolution(Solution S);

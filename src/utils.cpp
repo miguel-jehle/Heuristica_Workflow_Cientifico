@@ -178,13 +178,13 @@ void printProblem(Problem p) {
 }
 
 void writeSolution(Solution S, FILE * fl){
-fprintf(fl, "<task_id>\t <FX/VM id>\t <Custo_fin>\t <Tempo_workflow>\t <Custo_normalizado>\n");
+fprintf(fl, "<task_id>\t <FX/VM id>\t    <Custo_fin>\t      <Tempo_workflow>\t          <Custo_normalizado>\n");
     for(int i = 0; i < S.vet_tripla.size(); i++){
         if(S.vet_tripla[i].type == 0){
-            fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  VM\n", S.vet_tripla[i].task_id, S.vet_tripla[i].vm_id, S.vet_tripla[i].vm_cost_total, S.vet_tripla[i].vm_time_total, S.vet_tripla[i].cost);
+            fprintf(fl, "%d           %d            %.9f        %.9f                %.9f             VM\n", S.vet_tripla[i].task_id, S.vet_tripla[i].vm_id, S.vet_tripla[i].vm_cost_total, S.vet_tripla[i].vm_time_total, S.vet_tripla[i].cost);
         }
         else{
-            fprintf(fl, "%d\t %d\t %.9f\t %.9f\t %.9f  FX\n", S.vet_tripla[i].task_id, S.vet_tripla[i].config_id, S.vet_tripla[i].task_p_config_cost, S.vet_tripla[i].task_time_total, S.vet_tripla[i].cost);
+            fprintf(fl, "%d          %d           %.9f          %.9f                %.9f             FX\n", S.vet_tripla[i].task_id, S.vet_tripla[i].config_id, S.vet_tripla[i].task_p_config_cost, S.vet_tripla[i].task_time_total, S.vet_tripla[i].cost);
         }
     }
     return;
@@ -205,7 +205,7 @@ void setupOutputFiles(const char* caminho_base, char* caminho_geral, char* camin
         cerr << "Erro ao criar arquivo: " << caminho_final << endl;
         exit(1);
     }
-    fprintf(fs, "<Instância> \t <Custo_Financeiro_Melhor> \t <Tempo_Melhor> \t <Custo_Normalizado_Melhor> \t <Custo_Normalizado_Médio> \t <Tempo_CPU_Médio>\n \n");
+    fprintf(fs, "\n");
     fclose(fs);
 
     // Criar/limpar arquivo res_geral.txt
@@ -218,6 +218,44 @@ void setupOutputFiles(const char* caminho_base, char* caminho_geral, char* camin
     fclose(fl);
 
     return;
+}
+
+Solution Flexe(float alpha, float phi, Problem p, double tempo_por_seed, double* custo_medio_flexe) {
+    Solution melhor_solucao;
+    double soma_custos = 0.0;
+    double melhor_custo = __FLT_MAX__;
+    
+    for (int i = 0; i < 10; i++) {
+        int seed = i + 1;
+        double tempo_restante = tempo_por_seed;  // Reinicia para cada seed
+        double custo_melhor_seed = __FLT_MAX__;
+        Solution melhor_sol_seed;
+        
+        while(tempo_restante > 0.0) {
+            double inicio, fim, inicio_sis, fim_sis;
+            getCPUTime(&inicio, &inicio_sis);
+            
+            Solution sol = constructiveHeuristic(alpha, phi, &seed, p);
+            
+            if (sol.cost < custo_melhor_seed) {
+                custo_melhor_seed = sol.cost;
+                melhor_sol_seed = sol;
+            }
+            
+            getCPUTime(&fim, &fim_sis);
+            tempo_restante -= (fim - inicio);
+            
+            if (custo_melhor_seed < melhor_custo) {
+                melhor_custo = custo_melhor_seed;
+                melhor_solucao = melhor_sol_seed;
+            }
+        }
+        
+        soma_custos += custo_melhor_seed;
+    }
+    
+    *custo_medio_flexe = soma_custos / 10.0;
+    return melhor_solucao;
 }
 
 Solution GRASP_VND(Problem p, float alpha, float phi, int repeticoes, int seed, double& tempo_exec) {
@@ -251,7 +289,11 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
     Problem p = readData(caminho_completo);
     p.max_fin_cost = calculateMaxFinancialCost(p);
     p.max_runtime = calculateMaxRuntime(p);
-    //printProblem(p);
+    
+    FILE* fmi = fopen(caminho_final, "a");
+    fprintf(fmi, "Max Financial Cost: %f\n\n", p.max_fin_cost);
+    fprintf(fmi, "Max Runtime:        %f\n\n", p.max_runtime);
+    fclose(fmi);
 
     double custo_medio = 0.0;
     double tempo_medio = 0.0;
@@ -285,15 +327,30 @@ void processInstance(const char* nome_instancia, const char* caminho_geral, cons
         fclose(fl);
     }
 
-    custo_medio /= 1.0;
-    tempo_medio /= 1.0;
+    custo_medio /= 10.0;
+    tempo_medio /= 10.0;
+
+    double custo_medio_flexe;
+    Solution melhor_flexe = Flexe(alpha, phi, p, tempo_medio/10.0, &custo_medio_flexe);
 
     // Escrever resultados finais
     FILE* fs = fopen(caminho_final, "a");
-    fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", 
-            nome_instancia, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_medio, tempo_medio);
+    fprintf(fs, "                          GRASP-VND            Flexe\n\n");
+    fprintf(fs, "Custo Financeiro Melhor:  %f           %f\n\n", melhor_solucao.financial_cost, melhor_flexe.financial_cost);
+    fprintf(fs, "Tempo Melhor:             %f           %f\n\n", melhor_solucao.time, melhor_flexe.time);
+    fprintf(fs, "Custo Normalizado Melhor: %f           %f\n\n", melhor_solucao.cost, melhor_flexe.cost);
+    fprintf(fs, "Custo Normalizado Médio:  %f           %f\n\n", custo_medio, custo_medio_flexe);
+    fprintf(fs, "Tempo CPU Médio:          %f \t  \n\n", tempo_medio);
+    // fprintf(fs, "%s\t %f\t %f\t %f\t %f\t %f\n", 
+    //         nome_instancia, custo_financeiro_melhor, tempo_melhor, melhor_custo, custo_medio, tempo_medio);
     
-    fprintf(fs, "====================================================================\n\n\n");
+    fprintf(fs, "===============================================GRASP-VND===================================================\n\n");
+    writeSolution(melhor_solucao, fs);
+    fprintf(fs, "\n\n");
+    fprintf(fs, "================================================Flexe======================================================\n\n");
+    writeSolution(melhor_flexe, fs);
+    fprintf(fs, "\n\n");
+    fprintf(fs, "============================================================================================================\n");
     fclose(fs);
 }
 
