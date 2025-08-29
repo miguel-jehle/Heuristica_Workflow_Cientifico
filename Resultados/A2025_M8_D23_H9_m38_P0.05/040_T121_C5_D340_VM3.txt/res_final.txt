@@ -1,0 +1,5 @@
+
+Max Financial Cost: 0.040581
+
+Max Runtime:        2292.897484
+
